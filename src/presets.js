@@ -170,6 +170,44 @@ export function getPresetsDefinitions(self) {
 			feedbacks: [],
 		}
 
+		presets[`${key}_looping`] = {
+			type: 'button',
+			category: 'TimeLines',
+			style: {
+				text: '$(Smode_Live:tl_' + key + '_name)',
+				size: '14',
+				color: colors.colorWhite,
+				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+				alignment: 'center:top',
+				png64: icons.ICON_LOOP_OFF,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'tlLooping',
+							options: {
+								name: tlOBJ.label,
+								uuid: key,
+							},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: `${key}_loop`,
+					options: {
+						activation: tlOBJ.parameters.looping,
+					},
+					style: {
+						png64: icons.ICON_LOOP_ON,
+					},
+				},
+			],
+		}
+
 		// MAKERS
 		for (let i = 0; i < tlOBJ.timeMarkers.length; i++) {
 			let tmOBJ = tlOBJ.timeMarkers[i]
@@ -270,7 +308,7 @@ export function getPresetsDefinitions(self) {
 					style: {
 						png64: icons.ICON_OCULUS_CLOSE,
 					},
-				},
+				}
 			],
 		}
 

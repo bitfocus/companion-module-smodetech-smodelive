@@ -50,7 +50,7 @@ export const smodeLive = {
 	//   ██    ██ ██      ██ ███████ ███████ ██ ██   ████ ███████ ███████
 	//
 	async getTimelinesUUID(self) {
-		this.httpSend(self, new HttpGetOptions(self, 'TIMELINESUUID', `/api/live/animations`))
+		this.httpSend(self, 'TIMELINESUUID', `/api/live/animations`)
 	},
 
 	async getTimelinesList(self) {
@@ -78,7 +78,7 @@ export const smodeLive = {
 		// COMPARE
 		let compareJson = JSON.stringify(timelinesTMP) === JSON.stringify(self.smodeLiveData.timelines)
 		let comparecount = Object.keys(timelinesTMP).length === Object.keys(self.smodeLiveData.timelines).length
-		self.log('debug', `SMODELIVE | GET TIMELINES COMPARE >>> ${compareJson} ${comparecount}`)
+		//self.log('debug', `SMODELIVE | GET TIMELINES COMPARE >>> ${compareJson} ${comparecount}`)
 		self.smodeLiveData.timelines = timelinesTMP
 		if (!comparecount) {
 			await self.initVariables()
@@ -94,8 +94,8 @@ export const smodeLive = {
 	},
 
 	async getTimeline(self, uuid, name, path, parent) {
-		await this.httpSend(self, new HttpGetOptions(self, 'TIMELINE', `/api/live/objects/${uuid}`, '', httpsAgent))
-		self.log('debug', `SMODELIVE | GET TIMELINE >>> ${JSON.stringify(tlTMP, null, 4)}`)
+		await this.httpSend(self, 'TIMELINE', `/api/live/objects/${uuid}`)
+		//self.log('debug', `SMODELIVE | GET TIMELINE >>> ${JSON.stringify(tlTMP, null, 4)}`)
 		let jsonObject = tlTMP
 		jsonObject.label = name
 		jsonObject.parent = parent
@@ -104,7 +104,7 @@ export const smodeLive = {
 	},
 
 	async getTimelineMarkers(self, uuid) {
-		await this.httpSend(self, new HttpGetOptions(self, 'TIMELINEMAKERS', `/api/live/timelines/${uuid}/markers`, '', httpsAgent))
+		await this.httpSend(self, 'TIMELINEMAKERS', `/api/live/timelines/${uuid}/markers`)
 		return tlMakersTMP
 	},
 
@@ -120,6 +120,7 @@ export const smodeLive = {
 				//[`tl_${key}_color`]: tl[key].colorLabel,
 				[`tl_${key}_transport_state`]: tl[key].transport.state,
 				[`tl_${key}_transport_playing`]: tl[key].transport.playing,
+				[`tl_${key}_parameters_looping`]: tl[key].parameters.looping,
 			})
 			// MAKERS VARIABLE
 			let makersOBJ = tl[key].timeMarkers
@@ -148,7 +149,7 @@ export const smodeLive = {
 		for (const object in self.smodeLiveData.objects) {
 			if (self.smodeLiveData.objects[object].class === 'Scene') {
 				let uuid = self.smodeLiveData.objects[object].uuid
-				await this.httpSend(self, new HttpGetOptions(self, 'SCENE', `/api/live/objects/${uuid}`, '', httpsAgent))
+				await this.httpSend(self, 'SCENE', `/api/live/objects/${uuid}`)
 				scenesTMP[uuid] = sceneTMP
 			}
 		}
@@ -187,7 +188,7 @@ export const smodeLive = {
 				[`scene_${key}_activation`]: scenes[key].activation,
 				[`scene_${key}_loading`]: scenes[key].loading,
 				[`scene_${key}_name`]: scenes[key].label,
-				//[`scene_${key}_color`]: combineRgb(rgb[0], rgb[1], rgb[2]),
+				// [`scene_${key}_color`]: combineRgb(rgb[0], rgb[1], rgb[2]),
 			})
 		})
 		await self.checkFeedbacks()
@@ -207,7 +208,7 @@ export const smodeLive = {
 		if (filterClass !== '') {
 			fc = `?filterClass=${filterClass}`
 		}
-		this.httpSend(self, new HttpGetOptions(self, 'OBJECTS', `/api/live/objects${fc}`, filterClass, httpsAgent))
+		this.httpSend(self, 'OBJECTS', `/api/live/objects${fc}`, filterClass)
 	},
 
 	//
@@ -218,7 +219,7 @@ export const smodeLive = {
 	//██████  ███████   ████   ██  ██████ ███████ ███████
 	//
 	async getDevices(self) {
-		this.httpSend(self, new HttpGetOptions(self, 'DEVICES', `/api/live/devices`, '', httpsAgent))
+		this.httpSend(self, 'DEVICES', `/api/live/devices`)
 	},
 
 	async checkDevicesVariables(self) {
@@ -239,7 +240,7 @@ export const smodeLive = {
 	// ██████  ██   ████     ██   ██ ██ ██   ██
 	//
 	async getOnAir(self) {
-		this.httpSend(self, new HttpGetOptions(self, 'ONAIR', `/api/live/on-air`, '', httpsAgent))
+		this.httpSend(self, 'ONAIR', `/api/live/on-air`)
 	},
 
 	async checkOnAir(self) {
@@ -258,7 +259,7 @@ export const smodeLive = {
 	//███████  ██████  ██████      ██      ██  ██████  ██████  ███████
 	//
 	async getEcoMode(self) {
-		this.httpSend(self, new HttpGetOptions(self, 'ECOMODE', `/api/live/eco-mode`, '', httpsAgent))
+		this.httpSend(self, 'ECOMODE', `/api/live/eco-mode`)
 	},
 
 	async checkEcoMode(self) {
@@ -276,7 +277,7 @@ export const smodeLive = {
 	// ██████   ██████     ██    ██       ██████     ██
 	//
 	async getOutput(self) {
-		this.httpSend(self, new HttpGetOptions(self, 'OUTPUT', `/api/live/output`, '', httpsAgent))
+		this.httpSend(self, 'OUTPUT', `/api/live/output`)
 	},
 
 	async checkOutput(self) {
@@ -294,7 +295,7 @@ export const smodeLive = {
 	//███████    ██    ██   ██    ██     ██████  ███████
 	//
 	async getSmodeLiveStatus(self) {
-		this.httpSend(self, new HttpGetOptions(self, 'STATUS', `/api/live/status`, '', httpsAgent))
+		this.httpSend(self, 'STATUS', `/api/live/status`)
 	},
 
 	async checkStatus(self) {
@@ -314,7 +315,7 @@ export const smodeLive = {
 	//███████    ██    ██   ██    ██    ██ ███████    ██    ██  ██████
 	//
 	async getStatistics(self) {
-		this.httpSend(self, new HttpGetOptions(self, 'STASTITICS', `/api/engine/stats`, '', httpsAgent))
+		this.httpSend(self, 'STASTITICS', `/api/engine/stats`)
 	},
 
 	async checkStatistics(self) {
@@ -336,7 +337,7 @@ export const smodeLive = {
 	//
 	async getVersion(self) {
 		//console.info(httpsAgent)
-		this.httpSend(self, new HttpGetOptions(self, 'VERSION', `/api/live/softwareVersion`, '', httpsAgent))
+		this.httpSend(self , 'VERSION', `/api/live/softwareVersion`)
 	},
 
 	async checkVersion(self) {
@@ -352,8 +353,9 @@ export const smodeLive = {
 	},
 
 	// SEND & ERROR
-	async httpSend(self, options) {
+	async httpSend(self, id, url, filterClass = "") {
 		if (!this.getHttpValide(self)) return
+		let options = new HttpGetOptions(self, id, url, filterClass, httpsAgent)
 		try {
 			let response = await axios.request(options)
 			await this.httpReponse(self, response)

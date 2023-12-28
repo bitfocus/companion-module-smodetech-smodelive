@@ -100,7 +100,7 @@ export function getVariables() {
 	if (this.smodeLiveData.timelines != {}) {
 		let tl = this.smodeLiveData.timelines
 		Object.keys(tl).forEach((key) => {
-			//this.log('info', `VARIABLES | TIMELINES >>> ${key}`)
+			//this.log('warn', `VARIABLES | TIMELINES >>> ${tl[key].label}`)
 			variables.push({
 				variableId: `tl_${key}_uuid`,
 				name: `${tl[key].label} uuid`,
@@ -135,12 +135,12 @@ export function getVariables() {
 			})
 			variables.push({
 				variableId: `tl_${key}_parameters_looping`,
-				name: `${tl[key].label} parameters looping`,
+				name: `${tl[key].label} looping`,
 			})
 			// MAKERS VARIABLE
 			let makersOBJ = tl[key].timeMarkers
 			for (let i = 0; i < makersOBJ.length; i++) {
-				//this.log('info', `VARIABLES | TIMELINES >>> ${JSON.stringify(makersOBJ[i], null, 4)}`)
+				//this.log('warn', `VARIABLES | TIMELINES >>> ${tl[key].label}`)
 				variables.push({
 					variableId: `tl_maker_${key}_${makersOBJ[i].uuid}_uuid`,
 					name: `${tl[key].label} ${makersOBJ[i].label} UUID`,

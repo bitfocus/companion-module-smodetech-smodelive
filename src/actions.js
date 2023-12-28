@@ -35,8 +35,7 @@ export function getActionDefinitions(self) {
 				const postOptions = new HttpPostOptions(
 					self,
 					'TL_MOVE',
-					`/api/live/timelines/markers/${action.options.uuid}/move`,
-					false
+					`/api/live/timelines/markers/${action.options.uuid}/move`
 				)
 				axios
 					.request(postOptions)
@@ -74,8 +73,7 @@ export function getActionDefinitions(self) {
 				const postOptions = new HttpPostOptions(
 					self,
 					'TL_PLAYING',
-					`/api/live/trigger/${action.options.uuid}?variablePath==transport.${val}`,
-					false
+					`/api/live/trigger/${action.options.uuid}?variablePath==transport.${val}`
 				)
 				axios
 					.request(postOptions)
@@ -108,8 +106,7 @@ export function getActionDefinitions(self) {
 				const postOptions = new HttpPostOptions(
 					self,
 					'TL_RESET',
-					`/api/live/trigger/${action.options.uuid}?variablePath=transport.reset`,
-					false
+					`/api/live/trigger/${action.options.uuid}?variablePath=transport.reset`
 				)
 				axios
 					.request(postOptions)
@@ -140,8 +137,7 @@ export function getActionDefinitions(self) {
 				const postOptions = new HttpPostOptions(
 					self,
 					'TL_FINALIZE',
-					`/api/live/trigger/${action.options.uuid}?variablePath=transport.finalize`,
-					false
+					`/api/live/trigger/${action.options.uuid}?variablePath=transport.finalize`
 				)
 				axios
 					.request(postOptions)
@@ -172,8 +168,7 @@ export function getActionDefinitions(self) {
 				const postOptions = new HttpPostOptions(
 					self,
 					'TL_NEXT',
-					`/api/live/trigger/${action.options.uuid}?variablePath=transport.next`,
-					false
+					`/api/live/trigger/${action.options.uuid}?variablePath=transport.next`
 				)
 				axios
 					.request(postOptions)
@@ -205,7 +200,6 @@ export function getActionDefinitions(self) {
 					self,
 					'TL_PREVIOUS',
 					`/api/live/trigger/${action.options.uuid}?variablePath=transport.previous`,
-					false
 				)
 				axios
 					.request(postOptions)
@@ -216,6 +210,50 @@ export function getActionDefinitions(self) {
 					.catch(function (error) {
 						console.log(error)
 						this.httpError(self, 'TLPREVIOUS', error)
+					})
+			},
+		},
+
+		tlLooping: {
+			name: 'TimeLines Looping',
+			tooltip: 'TimeLines Looping',
+			options: [
+				{
+					id: 'uuid',
+					type: 'textinput',
+					label: 'UUID',
+					default: '0',
+				},
+			],
+			callback: async (action, context) => {
+				let val = true
+				if (self.getVariableValue(`tl_${action.options.uuid}_parameters_looping`) === true) val = false
+				// AXIOS
+				const patchOptions = new HttpPatchOptions(
+					self,
+					'TL_LOOPING',
+					`/api/live/objects/${action.options.uuid}?variablePath=parameters.looping`,
+					{ value: val },
+				)
+
+				self.log("info", `ACTIONS | TL LOOPING >>> ${patchOptions.url}\n${JSON.stringify(patchOptions.data,null,4)} `)
+	
+				axios
+					.request(patchOptions)
+					.then(async function (response) {
+						console.log(response.data)
+						console.log(response.status)
+						console.log(response.statusText)
+						console.log(response.headers)
+						console.log(response.config)
+						if (response.status === 200) {
+							await smodeLive.getTimelinesUUID(self)
+							await smodeLive.checkTimeLinesVariables(self)
+						}
+					})
+					.catch(function (error) {
+						console.log(error)
+						this.httpError(self, 'TLLOOPING', error)
 					})
 			},
 		},
@@ -257,12 +295,19 @@ export function getActionDefinitions(self) {
 					self,
 					'SCENEACTIVETOOGLE',
 					`/api/live/objects/${action.options.uuid}?variablePath=activation`,
-					{ value: val },
-					false
+					{ value: val }
 				)
+
+				//self.log("info", `ACTIONS | SCENE ACTIVATION TOGGLE >>> ${patchOptions.url}\n${JSON.stringify(patchOptions.data,null,4)} `)
+
 				axios
 					.request(patchOptions)
 					.then(async function (response) {
+						console.log(response.data)
+						console.log(response.status)
+						console.log(response.statusText)
+						console.log(response.headers)
+						console.log(response.config)
 						if (response.status === 200) {
 							Object.keys(scenes).forEach((key) => {
 								if ((key = action.options.uuid)) {
@@ -297,8 +342,7 @@ export function getActionDefinitions(self) {
 					self,
 					'SCENEACTIVEON',
 					`/api/live/objects/${action.options.uuid}?variablePath=activation`,
-					{ value: true },
-					false
+					{ value: true }
 				)
 				axios
 					.request(patchOptions)
@@ -337,8 +381,7 @@ export function getActionDefinitions(self) {
 					self,
 					'SCENEACTIVEOFF',
 					`/api/live/objects/${action.options.uuid}?variablePath=activation`,
-					{ value: false },
-					false
+					{ value: false }
 				)
 				axios
 					.request(patchOptions)
@@ -380,7 +423,6 @@ export function getActionDefinitions(self) {
 					'SCENELOADINGTOOGLE',
 					`/api/live/objects/${action.options.uuid}?variablePath=loading`,
 					{ value: val },
-					false
 				)
 				axios
 					.request(patchOptions)
@@ -425,7 +467,6 @@ export function getActionDefinitions(self) {
 					'SCENELOADINGON',
 					`/api/live/objects/${action.options.uuid}?variablePath=loading`,
 					{ value: true },
-					false
 				)
 				axios
 					.request(patchOptions)
@@ -465,7 +506,6 @@ export function getActionDefinitions(self) {
 					'SCENELOADINGOFF',
 					`/api/live/objects/${action.options.uuid}?variablePath=loading`,
 					{ value: false },
-					false
 				)
 				axios
 					.request(patchOptions)
@@ -512,7 +552,6 @@ export function getActionDefinitions(self) {
 					'DEVICEMUTE',
 					`/api/live/devices/${action.options.uuid}?variablePath=mute`,
 					{ value: val },
-					false
 				)
 
 				axios
@@ -552,7 +591,7 @@ export function getActionDefinitions(self) {
 				let val = false
 				if (!self.getVariableValue(`status_on_air`)) val = true
 				// AXIOS
-				const patchOptions = new HttpPatchOptions(self, 'ONAIR', `/api/live/on-air`, { onAir: val }, false)
+				const patchOptions = new HttpPatchOptions(self, 'ONAIR', `/api/live/on-air`, { onAir: val })
 				//self.log('info', `SMODE LIVE | HTTP RESPONSE | ONAIR OPTIONS >>> ${JSON.stringify(patchOptions, null, 4)}`)
 				axios
 					.request(patchOptions)
@@ -581,7 +620,7 @@ export function getActionDefinitions(self) {
 				let val = false
 				if (!self.getVariableValue(`status_eco_mode`)) val = true
 				// AXIOS
-				const patchOptions = new HttpPatchOptions(self, 'ECOMODE', `/api/live/eco-mode`, { ecoMode: val }, false)
+				const patchOptions = new HttpPatchOptions(self, 'ECOMODE', `/api/live/eco-mode`, { ecoMode: val })
 				self.log('info', `SMODE LIVE | HTTP RESPONSE | ECOMODE OPTIONS >>> ${JSON.stringify(patchOptions, null, 4)}`)
 				axios
 					.request(patchOptions)
@@ -610,7 +649,7 @@ export function getActionDefinitions(self) {
 				let val = false
 				if (self.getVariableValue(`status_output`) === 'disabled') val = true
 				// AXIOS
-				const patchOptions = new HttpPatchOptions(self, 'OUTPUT', `/api/live/output`, { output: val }, false)
+				const patchOptions = new HttpPatchOptions(self, 'OUTPUT', `/api/live/output`, { output: val })
 				self.log('info', `SMODE LIVE | HTTP RESPONSE | OUTPUT OPTIONS >>> ${JSON.stringify(patchOptions, null, 4)}`)
 				axios
 					.request(patchOptions)

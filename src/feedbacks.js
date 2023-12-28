@@ -13,8 +13,9 @@ export function getFeedbackDefinitions(self) {
 	Object.keys(self.smodeLiveData.timelines).forEach((key) => {
 		let tlOBJ = self.smodeLiveData.timelines[key]
 		const fbTS = `${key}_transport_state`
-		const fbAC = `${key}_activation`
-		const fbLD = `${key}_loading`
+		const fbLoop = `${key}_loop`
+		// const fbAC = `${key}_activation`
+		// const fbLD = `${key}_loading`
 
 		const rgb = [
 			Math.ceil(tlOBJ.colorLabel.red * 255),
@@ -33,6 +34,22 @@ export function getFeedbackDefinitions(self) {
 			options: [],
 			callback: function (feedback) {
 				if (self.getVariableValue(`tl_${key}_transport_state`) === "paused") {
+					return true
+				}
+			},
+		}
+
+		feedbacks[fbLoop] = {
+			name: `${tlOBJ.label} Looping`,
+			type: 'boolean',
+			label: `${tlOBJ.label} Looping`,
+			defaultStyle: {
+				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [],
+			callback: function (feedback) {
+				if (self.getVariableValue(`tl_${key}_parameters_looping`) === true) {
 					return true
 				}
 			},
