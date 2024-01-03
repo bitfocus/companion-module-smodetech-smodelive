@@ -1,3 +1,3 @@
 # companion-module-smoedtech-smodelive
 
-See [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE)
+See [INSTALL.md](./companion/INSTALL.md) [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE)
