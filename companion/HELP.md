@@ -16,9 +16,8 @@ Version control 0.1.0
 * Power Save Mode
 
 ##### General Actions
-* Get Scenes
+* Get Contents
 * Get Devices
-* Get Timelines
 * Get STatus
 * Get Version
 * Get Statistics
@@ -51,9 +50,8 @@ Version control 0.1.0
 * Power Save Mode
 
 ##### General Presets
-* Get Scenes
+* Get Contents
 * Get Devices
-* Get Timelines
 
 ##### Scenes Preset
 * Scene Activation Toggle

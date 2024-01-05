@@ -249,7 +249,7 @@ export function getActionDefinitions(self) {
 			],
 			callback: async (action, context) => {
 				let val = true
-				if (self.getVariableValue(`tl_${action.options.uuid}_parameters_looping`) === true) val = false
+				if (self.getVariableValue(`tl_${action.options.uuid}_looping`) === true) val = false
 				// AXIOS
 				const patchOptions = new HttpPatchOptions(
 					self,
@@ -269,7 +269,8 @@ export function getActionDefinitions(self) {
 						console.log(response.headers)
 						console.log(response.config)
 						if (response.status === 200) {
-							await smodeLive.getTimelinesUUID(self)
+							let tl = self.smodeLiveData.timelines
+							tl[action.options.uuid].parameters.looping = response.data.parameters.looping
 							await smodeLive.checkTimeLinesVariables(self)
 						}
 					})
