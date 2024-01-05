@@ -3,6 +3,53 @@ import { combineRgb } from '@companion-module/base'
 export function getFeedbackDefinitions(self) {
 	const feedbacks = {}
 
+	// CONTENTS
+	// Object.keys(self.smodeLiveData.contents).forEach((key) => {
+	// 	let ctOBJ = self.smodeLiveData.contents[key]
+	// 	//self.log('info', `FEEDBACKS | CONTENTS >>> ${JSON.stringify(ctOBJ, null, 4)}`)
+	// 	const fbAC = `${ctOBJ.uuid}_activation`
+	// 	const fbLD = `${ctOBJ.uuid}_loading`
+	// 	const rgb = [
+	// 		Math.ceil(ctOBJ.colorLabel.red * 255),
+	// 		Math.ceil(ctOBJ.colorLabel.green * 255),
+	// 		Math.ceil(ctOBJ.colorLabel.blue * 255),
+	// 	]
+
+	// 	feedbacks[fbAC] = {
+	// 		name: `${ctOBJ.label} activation`,
+	// 		type: 'boolean',
+	// 		label: `${ctOBJ.label} activation`,
+	// 		defaultStyle: {
+	// 			bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+	// 			color: combineRgb(0, 0, 0),
+	// 		},
+	// 		options: [],
+	// 		callback: function (feedback) {
+	// 			//console.log(`FEEDBACK | SCENES ACTION`)
+	// 			if (self.getVariableValue(`${ctOBJ.uuid}_activation`) === "inactive") {
+	// 				return true
+	// 			}
+	// 		},
+	// 	}
+
+	// 	feedbacks[fbLD] = {
+	// 		name: `${ctOBJ.label} loading`,
+	// 		type: 'boolean',
+	// 		label: `${ctOBJ.label} loading`,
+	// 		defaultStyle: {
+	// 			bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+	// 			color: combineRgb(0, 0, 0),
+	// 		},
+	// 		options: [],
+	// 		callback: function (feedback) {
+	// 			//console.log(`FEEDBACK | SCENES LOADING`)
+	// 			if (self.getVariableValue(`${ctOBJ.uuid}_loading`) === "inactive") {
+	// 				return true
+	// 			}
+	// 		},
+	// 	}
+	// })
+
 	//████████ ██ ███    ███ ███████ ██      ██ ███    ██ ███████ ███████
 	//   ██    ██ ████  ████ ██      ██      ██ ████   ██ ██      ██
 	//   ██    ██ ██ ████ ██ █████   ██      ██ ██ ██  ██ █████   ███████
@@ -12,7 +59,8 @@ export function getFeedbackDefinitions(self) {
 
 	Object.keys(self.smodeLiveData.timelines).forEach((key) => {
 		let tlOBJ = self.smodeLiveData.timelines[key]
-		const fbTS = `${key}_transport_state`
+		//self.log('info', `FEEDBACK | TIMELINES >>> ${key}_${tlOBJ.label}`)
+		const fbTS = `${key}_playing`
 		const fbLoop = `${key}_loop`
 		// const fbAC = `${key}_activation`
 		// const fbLD = `${key}_loading`
@@ -33,7 +81,7 @@ export function getFeedbackDefinitions(self) {
 			},
 			options: [],
 			callback: function (feedback) {
-				if (self.getVariableValue(`tl_${key}_transport_state`) === "paused") {
+				if (self.getVariableValue(`tl_${key}_playing`) === false) {
 					return true
 				}
 			},
@@ -49,7 +97,7 @@ export function getFeedbackDefinitions(self) {
 			},
 			options: [],
 			callback: function (feedback) {
-				if (self.getVariableValue(`tl_${key}_parameters_looping`) === true) {
+				if (self.getVariableValue(`tl_${key}_looping`) === true) {
 					return true
 				}
 			},

@@ -97,18 +97,25 @@ export function GetConfigFields(self) {
         },
         {
 			type: 'checkbox',
-			id: 'autoScenes',
-			label: 'Auto Get Scenes',
+			id: 'autoContents',
+			label: 'Auto Get Contents',
 			default: false,
 			width: 2
 		},
-        {
-			type: 'checkbox',
-			id: 'autoTimeLines',
-			label: 'Auto Get TimeLines',
-			default: false,
-			width: 2
-		},
+        // {
+		// 	type: 'checkbox',
+		// 	id: 'autoScenes',
+		// 	label: 'Auto Get Scenes',
+		// 	default: false,
+		// 	width: 2
+		// },
+        // {
+		// 	type: 'checkbox',
+		// 	id: 'autoTimeLines',
+		// 	label: 'Auto Get TimeLines',
+		// 	default: false,
+		// 	width: 2
+		// },
         {
 			type: 'checkbox',
 			id: 'autoDevices',

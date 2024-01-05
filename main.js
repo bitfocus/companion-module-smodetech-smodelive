@@ -46,8 +46,10 @@ class SmodeLive extends InstanceBase {
 				{ id: 'mute', name: 'Mute' },
 				{ id: 'unmute', name: 'Unmute' },
 			],
+			contents: [],
 			objects: [],
 			scenes: {},
+			show: {},
 			timelinesUUID: [],
 			timelines: {},
 			activation: [
@@ -100,9 +102,8 @@ class SmodeLive extends InstanceBase {
 		await smodeLive.getOnAir(this)
 		await smodeLive.getEcoMode(this)
 		await smodeLive.getOutput(this)
-		if (this.config.autoScenes) await smodeLive.getObjects(this, "Scene")
+		if (this.config.autoContents) await smodeLive.getContents(this)
 		if (this.config.autoDevices) await smodeLive.getDevices(this)
-		if (this.config.autoTimeLines) await smodeLive.getTimelinesUUID(this)
 	}
 
 	//██████   ██████  ██      ██      ██ ███    ██  ██████  

@@ -10,6 +10,30 @@ let tlMakersTMP = {}
 let httpsAgent
 
 export const smodeLive = {
+	// CONTENTS
+	async getContents(self) {
+		this.httpSend(self, 'CONTENTS', `/api/live/contents`)
+	},
+
+	async checkContentsVariables(self) {
+		let contents = self.smodeLiveData.contents
+		Object.keys(contents).forEach((key) => {
+			// const rgb = [
+			// 	Math.ceil(contents[key].colorLabel.red * 255),
+			// 	Math.ceil(contents[key].colorLabel.green * 255),
+			// 	Math.ceil(contents[key].colorLabel.blue * 255),
+			// ]
+			self.setVariableValues({
+				[`${contents[key].uuid}_uuid`]: contents[key].uuid,
+				[`${contents[key].uuid}_activation`]: contents[key].activation,
+				[`${contents[key].uuid}_loading`]: contents[key].loading,
+				[`${contents[key].uuid}_name`]: contents[key].label,
+				// [`scene_${key}_color`]: combineRgb(rgb[0], rgb[1], rgb[2]),
+			})
+		})
+		await self.checkFeedbacks()
+	},
+
 	//██ ███    ██ ██ ████████     ███████ ███    ███  ██████  ██████  ███████     ██      ██ ██    ██ ███████
 	//██ ████   ██ ██    ██        ██      ████  ████ ██    ██ ██   ██ ██          ██      ██ ██    ██ ██
 	//██ ██ ██  ██ ██    ██        ███████ ██ ████ ██ ██    ██ ██   ██ █████       ██      ██ ██    ██ █████
@@ -17,7 +41,7 @@ export const smodeLive = {
 	//██ ██   ████ ██    ██        ███████ ██      ██  ██████  ██████  ███████     ███████ ██   ████   ███████
 	//
 	async init_smode_live(self) {
-		self.log('info', axios.isCancel('something'))
+		self.log('info', `AXIOS IS CANCEL >>> ${axios.isCancel('something')}`)
 		if (self.config.https) {
 			console.info(`SMODE LIVE | INIT HTTPS !`)
 			self.smodeLiveData.prefix = `https://${self.config.host}:${self.config.port}`
@@ -40,6 +64,7 @@ export const smodeLive = {
 			return
 		} else {
 			await this.getVersion(self)
+			await this.getContents(self)
 		}
 	},
 
@@ -49,78 +74,56 @@ export const smodeLive = {
 	//   ██    ██ ██  ██  ██ ██      ██      ██ ██  ██ ██ ██           ██
 	//   ██    ██ ██      ██ ███████ ███████ ██ ██   ████ ███████ ███████
 	//
-	async getTimelinesUUID(self) {
-		this.httpSend(self, 'TIMELINESUUID', `/api/live/animations`)
-	},
+	// async getTimelinesUUID(self) {
+	// 	this.httpSend(self, 'TIMELINESUUID', `/api/live/animations`)
+	// },
 
 	async getTimelinesList(self) {
-		//self.log('info', `SMODELIVE | GET TIMELINES LIST | LIST UUID >>> ${JSON.stringify(self.smodeLiveData.timelinesUUID, null, 4)}`)
 		let timelinesTMP = {}
-		const listUUID = self.smodeLiveData.timelinesUUID
-
-		for (const object in listUUID) {
-			if (listUUID[object].type === 'Timeline') {
-				let p = []
-				p = listUUID[object].path.split(' -> ')
-				timelinesTMP[listUUID[object].uuid] = await this.getTimeline(
+		let contents = self.smodeLiveData.contents
+		for (const scene in contents) {
+			if (contents[scene].animationUuid != '00000000-0000-0000-0000-000000000000') {
+				timelinesTMP[contents[scene].animationUuid] = await this.getTimeline(
 					self,
-					listUUID[object].uuid,
-					listUUID[object].name,
-					listUUID[object].path,
-					p[p.length - 2]
+					contents[scene].animationUuid,
+					contents[scene].label
 				)
-				//self.log('info', `SMODELIVE | GET TIMELINES LIST >>> ${JSON.stringify(timelinesTMP, null, 4)}`)
-				timelinesTMP[listUUID[object].uuid].timeMarkers = await this.getTimelineMarkers(self, listUUID[object].uuid)
+				timelinesTMP[contents[scene].animationUuid].timeMarkers = contents[scene].actions
 			}
 		}
-		self.log('debug', `SMODELIVE | GET TIMELINE PROPS >>> ${JSON.stringify(timelinesTMP, null, 4)}`)
-
-		// COMPARE
-		let compareJson = JSON.stringify(timelinesTMP) === JSON.stringify(self.smodeLiveData.timelines)
-		let comparecount = Object.keys(timelinesTMP).length === Object.keys(self.smodeLiveData.timelines).length
-		//self.log('debug', `SMODELIVE | GET TIMELINES COMPARE >>> ${compareJson} ${comparecount}`)
+		//self.log('info', `SMODELIVE | GET TIMELINE PROPS >>> ${JSON.stringify(timelinesTMP, null, 4)}`)
 		self.smodeLiveData.timelines = timelinesTMP
-		if (!comparecount) {
-			await self.initVariables()
-			await self.updateFeedbacks()
-			await self.updateActions()
-			await self.updatePresets()
-			await this.checkTimeLinesVariables(self)
-		} else if (!compareJson) {
-			await self.updatePresets()
-			await self.updateFeedbacks()
-			await this.checkTimeLinesVariables(self)
-		}
+		await self.initVariables()
+		await self.updateFeedbacks()
+		//await self.updateActions()
+		await self.updatePresets()
+		await this.checkTimeLinesVariables(self)
 	},
 
-	async getTimeline(self, uuid, name, path, parent) {
+	async getTimeline(self, uuid, parent) {
+		self.log('info', `SMODELIVE | GET TIMELINE >>> ${uuid} ${parent}`)
 		await this.httpSend(self, 'TIMELINE', `/api/live/objects/${uuid}`)
-		//self.log('debug', `SMODELIVE | GET TIMELINE >>> ${JSON.stringify(tlTMP, null, 4)}`)
+		//self.log('info', `SMODELIVE | GET TIMELINE >>> ${JSON.stringify(tlTMP, null, 4)}`)
 		let jsonObject = tlTMP
-		jsonObject.label = name
+		jsonObject.label = 'MT'
 		jsonObject.parent = parent
-		jsonObject.path = path
 		return jsonObject
 	},
 
-	async getTimelineMarkers(self, uuid) {
-		await this.httpSend(self, 'TIMELINEMAKERS', `/api/live/timelines/${uuid}/markers`)
-		return tlMakersTMP
-	},
 
 	async checkTimeLinesVariables(self) {
 		let tl = self.smodeLiveData.timelines
+		//self.log('info', `SMODELIVE | CHECK TIMELINE VARIABLES >>> ${JSON.stringify(self.smodeLiveData.timelines, null,4)} `)
 		Object.keys(tl).forEach((key) => {
 			self.setVariableValues({
 				[`tl_${key}_uuid`]: key,
 				[`tl_${key}_activation`]: tl[key].activation,
 				[`tl_${key}_loading`]: tl[key].loading,
-				[`tl_${key}_name`]: tl[key].label,
+				[`tl_${key}_name`]: tl[key].parent + '\nMT',
 				[`tl_${key}_parent`]: tl[key].parent,
 				//[`tl_${key}_color`]: tl[key].colorLabel,
-				[`tl_${key}_transport_state`]: tl[key].transport.state,
-				[`tl_${key}_transport_playing`]: tl[key].transport.playing,
-				[`tl_${key}_parameters_looping`]: tl[key].parameters.looping,
+				[`tl_${key}_playing`]: tl[key].transport.playing,
+				[`tl_${key}_looping`]: tl[key].parameters.looping,
 			})
 			// MAKERS VARIABLE
 			let makersOBJ = tl[key].timeMarkers
@@ -142,37 +145,26 @@ export const smodeLive = {
 	//███████  ██████ ███████ ██   ████ ███████ ███████
 	//
 
-	async getScenesInObjects(self) {
+	async getScenesInContents(self) {
 		if (!this.getHttpValide(self)) return
-		self.log('info', `SMODELIVE | GET SCENES IN OBJECTS | START !`)
+		//self.log('info', `SMODELIVE | GET SCENES IN CONTENTS | START !`)
 		let scenesTMP = {}
-		for (const object in self.smodeLiveData.objects) {
-			if (self.smodeLiveData.objects[object].class === 'Scene') {
-				let uuid = self.smodeLiveData.objects[object].uuid
+		let contents = self.smodeLiveData.contents
+		for (const scene in contents) {
+			if (contents[scene].label === 'Show') {
+				//self.smodeLiveData.show[contents[scene].uuid] = contents[scene]
+			} else {
+				let uuid = contents[scene].uuid
 				await this.httpSend(self, 'SCENE', `/api/live/objects/${uuid}`)
 				scenesTMP[uuid] = sceneTMP
 			}
 		}
-		let compareJson = JSON.stringify(scenesTMP) === JSON.stringify(self.smodeLiveData.scenes)
-		let comparecount = Object.keys(scenesTMP).length === Object.keys(self.smodeLiveData.scenes).length
-		//self.log('debug', `SMODELIVE | GET SCENE TMP PROPS >>> ${JSON.stringify(scenesTMP, null, 4)}`)
-		//self.log('debug', `SMODELIVE | GET SCENE COMPARE >>> ${compareJson} ${comparecount}`)
 		self.smodeLiveData.scenes = scenesTMP
-		if (!comparecount) {
-			await self.initVariables()
-			await this.checkSceneVariables(self)
-			await self.updateFeedbacks()
-			await self.updateActions()
-			await self.updatePresets()
-		} else if (!compareJson) {
-			await this.checkSceneVariables(self)
-			await self.updateFeedbacks()
-			await self.updatePresets()
-		}
-		// self.log(
-		// 	'info',
-		// 	`SMODELIVE | SMODELIVE DATA SCENES RESULT >>> ${JSON.stringify(self.smodeLiveData.scenes, null, 4)}`
-		// )
+		await self.initVariables()
+		await this.checkSceneVariables(self)
+		await self.updateActions()
+		await self.updatePresets()
+		await self.updateFeedbacks()
 	},
 
 	async checkSceneVariables(self) {
@@ -337,7 +329,7 @@ export const smodeLive = {
 	//
 	async getVersion(self) {
 		//console.info(httpsAgent)
-		this.httpSend(self , 'VERSION', `/api/live/softwareVersion`)
+		this.httpSend(self, 'VERSION', `/api/live/softwareVersion`)
 	},
 
 	async checkVersion(self) {
@@ -353,14 +345,14 @@ export const smodeLive = {
 	},
 
 	// SEND & ERROR
-	async httpSend(self, id, url, filterClass = "") {
+	async httpSend(self, id, url, filterClass = '') {
 		if (!this.getHttpValide(self)) return
 		let options = new HttpGetOptions(self, id, url, filterClass, httpsAgent)
 		try {
 			let response = await axios.request(options)
 			await this.httpReponse(self, response)
 		} catch (error) {
-			self.log('error', `HTTP GET Request failed (${error.message} | ${error.code})`)
+			self.log('error', `HTTP GET Request failed (${id} | ${error.message} | ${error.code})`)
 			if (error.code === 'ECONNABORTED') {
 				self.updateStatus(InstanceStatus.ConnectionFailure, 'Check Smode Live Server!')
 			} else if (error.code === 'UNABLE_TO_VERIFY_LEAF_SIGNATURE') {
@@ -374,13 +366,24 @@ export const smodeLive = {
 	async httpReponse(self, response) {
 		if (response && typeof response.data === 'object') {
 			self.updateStatus(InstanceStatus.Ok)
+
+			// CONTENTS
+			if (response.config.id === 'CONTENTS') {
+				self.log('info', `SMODE LIVE | HTTP RESPONSE CONTENTS >>> ${JSON.stringify(response.data, null, 4)}`)
+
+				self.smodeLiveData.contents = response.data
+				await this.getScenesInContents(self)
+				await this.getTimelinesList(self)
+				return
+			}
+
 			// VERSION
 			if (response.config.id === 'VERSION') {
-				console.log(response.data)
-				console.log(response.status)
-				console.log(response.statusText)
-				console.log(response.headers)
-				console.log(response.config)
+				// console.log(response.data)
+				// console.log(response.status)
+				// console.log(response.statusText)
+				// console.log(response.headers)
+				// console.log(response.config)
 				if (response.status === 200) {
 					self.smodeLiveData.getversion = false
 					self.smodeLiveData.version = response.data
@@ -448,6 +451,11 @@ export const smodeLive = {
 
 			// TIMELINESUUID
 			if (response.config.id === 'TIMELINESUUID') {
+				// console.log(response.data)
+				// console.log(response.status)
+				// console.log(response.statusText)
+				// console.log(response.headers)
+				// console.log(response.config)
 				//self.log('warn', `SMODE LIVE | HTTP RESPONSE | TIMELINEs UUID >>> ${JSON.stringify(response.data, null, 4)}`)
 				self.smodeLiveData.timelinesUUID = response.data
 				this.getTimelinesList(self)
@@ -456,6 +464,11 @@ export const smodeLive = {
 
 			// TIMELINE
 			if (response.config.id === 'TIMELINE') {
+				// console.log(response.data)
+				// console.log(response.status)
+				// console.log(response.statusText)
+				// console.log(response.headers)
+				// console.log(response.config)
 				//self.log('warn', `SMODE LIVE | HTTP RESPONSE | TIMELINE >>> ${JSON.stringify(response.data, null, 4)}`)
 				tlTMP = response.data
 				return
@@ -463,6 +476,11 @@ export const smodeLive = {
 
 			// TIMELINE MAKERS
 			if (response.config.id === 'TIMELINEMAKERS') {
+				// console.log(response.data)
+				// console.log(response.status)
+				// console.log(response.statusText)
+				// console.log(response.headers)
+				// console.log(response.config)
 				//self.log('info', `SMODE LIVE | HTTP RESPONSE | TIMELINE MAKERS >>> ${JSON.stringify(response.data, null, 4)}`)
 				tlMakersTMP = response.data
 				return
@@ -499,6 +517,17 @@ export const smodeLive = {
 		}
 	},
 
+	// ACTIONS ERROR
+	async actionsError(self, id, error) {
+		self.log('error', `ACTION ERROR | REQUEST FAILED >>> ${id} | ${error.message} | ${error.code}`)
+		if (error.code === 'ECONNABORTED') {
+			self.updateStatus(InstanceStatus.ConnectionFailure, 'Check Smode Live Server!')
+		} else if (error.code === 'UNABLE_TO_VERIFY_LEAF_SIGNATURE') {
+			self.updateStatus(InstanceStatus.ConnectionFailure, error.message)
+		}
+		//console.error(error.message)
+	},
+
 	//
 	//██    ██ ██████  ██          ██    ██  █████  ██      ██ ██████  ███████
 	//██    ██ ██   ██ ██          ██    ██ ██   ██ ██      ██ ██   ██ ██
@@ -511,15 +540,44 @@ export const smodeLive = {
 		if (self.config.host && self.config.port && self.smodeLiveData.prefix.length > 0) return true
 		else return false
 	},
-
-	//██    ██ ████████ ██ ██      ███████
-	//██    ██    ██    ██ ██      ██
-	//██    ██    ██    ██ ██      ███████
-	//██    ██    ██    ██ ██           ██
-	// ██████     ██    ██ ███████ ███████
-	//
-	// async getColorFloatToInt(color) {
-	// 	const colorGenerate = [Math.ceil(color.red * 255), Math.ceil(color.green * 255), Math.ceil(color.blue * 255)]
-	// 	return colorGenerate
-	// },
 }
+
+	// async getScenesInObjects(self) {
+	// 	if (!this.getHttpValide(self)) return
+	// 	self.log('info', `SMODELIVE | GET SCENES IN OBJECTS | START !`)
+	// 	let scenesTMP = {}
+	// 	for (const object in self.smodeLiveData.objects) {
+	// 		if (self.smodeLiveData.objects[object].class === 'Scene') {
+	// 			let uuid = self.smodeLiveData.objects[object].uuid
+	// 			await this.httpSend(self, 'SCENE', `/api/live/objects/${uuid}`)
+	// 			scenesTMP[uuid] = sceneTMP
+	// 		}
+	// 	}
+	// 	let compareJson = JSON.stringify(scenesTMP) === JSON.stringify(self.smodeLiveData.scenes)
+	// 	let comparecount = Object.keys(scenesTMP).length === Object.keys(self.smodeLiveData.scenes).length
+	// 	//self.log('debug', `SMODELIVE | GET SCENE TMP PROPS >>> ${JSON.stringify(scenesTMP, null, 4)}`)
+	// 	//self.log('debug', `SMODELIVE | GET SCENE COMPARE >>> ${compareJson} ${comparecount}`)
+	// 	self.smodeLiveData.scenes = scenesTMP
+	// 	if (!comparecount) {
+	// 		await self.initVariables()
+	// 		await this.checkSceneVariables(self)
+	// 		await self.updateFeedbacks()
+	// 		await self.updateActions()
+	// 		await self.updatePresets()
+	// 	} else if (!compareJson) {
+	// 		await this.checkSceneVariables(self)
+	// 		await self.updateFeedbacks()
+	// 		await self.updatePresets()
+	// 	}
+	// 	// self.log(
+	// 	// 	'info',
+	// 	// 	`SMODELIVE | SMODELIVE DATA SCENES RESULT >>> ${JSON.stringify(self.smodeLiveData.scenes, null, 4)}`
+	// 	// )
+	// },
+
+
+	// async getTimelineMarkers(self, uuid) {
+	// 	await this.httpSend(self, 'TIMELINEMAKERS', `/api/live/timelines/${uuid}/markers`)
+	// 	//self.log('info', `SMODELIVE | GET TIMELINE MAKERS >>> ${JSON.stringify(tlMakersTMP, null, 4)}`)
+	// 	return tlMakersTMP
+	// },
