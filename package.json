@@ -12,11 +12,9 @@
 		"url": "git+https://github.com/bitfocus/companion-module-your-module-name.git"
 	},
 	"dependencies": {
-		"@companion-module/base": "~1.5.1",
+		"@companion-module/base": "~1.4.3",
 		"axios": "^1.6.2",
-		"fs": "^0.0.1-security",
-		"got": "^13.0.0",
-		"node-libcurl": "^3.0.0"
+		"fs": "^0.0.1-security"
 	},
 	"devDependencies": {
 		"@companion-module/tools": "^1.4.1"

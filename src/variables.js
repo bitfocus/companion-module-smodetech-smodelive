@@ -58,39 +58,6 @@ export function getVariables() {
 		}
 	}
 
-	// // CONTENTS
-	// if (this.smodeLiveData.contents != []) {
-	// 	let contents = this.smodeLiveData.contents
-	// 	Object.keys(contents).forEach(async (key) => {
-	// 		//this.log('info', `VARIABLES | SCENE >>> ${key}`)
-	// 		variables.push({
-	// 			variableId: `${contents[key].uuid}_uuid`,
-	// 			name: `${contents[key].label} uuid`,
-	// 		})
-	// 		variables.push({
-	// 			variableId: `${contents[key].uuid}_activation`,
-	// 			name: `${contents[key].label} activation`,
-	// 		})
-	// 		variables.push({
-	// 			variableId: `${contents[key].uuid}_loading`,
-	// 			name: `${contents[key].label} loading`,
-	// 		})
-	// 		variables.push({
-	// 			variableId: `${contents[key].uuid}_name`,
-	// 			name: `${contents[key].label} name`,
-	// 		})
-	// 		// variables.push({
-	// 		// 	variableId: `scene_${key}_color`,
-	// 		// 	name: `${scenes[key].label} color`,
-	// 		// })
-	// 		// ACTIONS
-	// 		// let actions = contents.actions
-	// 		// if (actions != []) {
-	// 		// 	variables = await getActionsVariables(variables ,actions, contents[key].label)
-	// 		// }
-	// 	})
-	// }
-
 	//███████  ██████ ███████ ███    ██ ███████ ███████
 	//██      ██      ██      ████   ██ ██      ██
 	//███████ ██      █████   ██ ██  ██ █████   ███████
@@ -184,6 +151,39 @@ export function getVariables() {
 
 	return variables
 }
+
+// // CONTENTS
+// if (this.smodeLiveData.contents != []) {
+// 	let contents = this.smodeLiveData.contents
+// 	Object.keys(contents).forEach(async (key) => {
+// 		//this.log('info', `VARIABLES | SCENE >>> ${key}`)
+// 		variables.push({
+// 			variableId: `${contents[key].uuid}_uuid`,
+// 			name: `${contents[key].label} uuid`,
+// 		})
+// 		variables.push({
+// 			variableId: `${contents[key].uuid}_activation`,
+// 			name: `${contents[key].label} activation`,
+// 		})
+// 		variables.push({
+// 			variableId: `${contents[key].uuid}_loading`,
+// 			name: `${contents[key].label} loading`,
+// 		})
+// 		variables.push({
+// 			variableId: `${contents[key].uuid}_name`,
+// 			name: `${contents[key].label} name`,
+// 		})
+// 		// variables.push({
+// 		// 	variableId: `scene_${key}_color`,
+// 		// 	name: `${scenes[key].label} color`,
+// 		// })
+// 		// ACTIONS
+// 		// let actions = contents.actions
+// 		// if (actions != []) {
+// 		// 	variables = await getActionsVariables(variables ,actions, contents[key].label)
+// 		// }
+// 	})
+// }
 
 // async function getActionsVariables(variables, actions, parent) {
 // 	for (let i = 0; i < actions.length; i++) {

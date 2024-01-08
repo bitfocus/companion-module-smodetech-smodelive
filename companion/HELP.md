@@ -18,7 +18,7 @@ Version control 0.1.0
 ##### General Actions
 * Get Contents
 * Get Devices
-* Get STatus
+* Get Status
 * Get Version
 * Get Statistics
 
@@ -31,10 +31,14 @@ Version control 0.1.0
 * Scene Loading Off
 
 ##### Timelines Actions
-* Timeline Play | Pause
+* Timeline Play Toggle
+* Timeline Play
+* Timeline Pause
 * Timeline Reset
+* Timeline Finalize
 * Timeline Next
 * Timeline Previous
+* Timeline Looping
 
 ##### Timelines Markers Actions
 * TimeLines Maker Move
@@ -58,13 +62,15 @@ Version control 0.1.0
 * Scene Loading Toggle
 
 ##### Timelines Preset
-* Timeline Play | Pause
+* Timeline Play Toggle
 * Timeline Reset
+* Timeline Finalize
 * Timeline Next
 * Timeline Previous
+* Timeline Looping
 
-##### Timelines Markers Preset
-* TimeLines Maker Move
+##### Timeline Markers Preset
+* TimeLine Marker Move
 
 ##### Devices Presets
 *  Devices Mute

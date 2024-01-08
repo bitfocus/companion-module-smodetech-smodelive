@@ -210,7 +210,7 @@ export function getPresetsDefinitions(self) {
 			],
 		}
 		//self.log('debug', `PRESETS | TIMELINE MAKERS >>> ${tlOBJ.timeMarkers.length} ${JSON.stringify(tlOBJ.timeMarkers, null, 4)}`)
-		// MAKERS
+		// MARKERS
 		for (let i = 0; i < tlOBJ.timeMarkers.length; i++) {
 			let tmOBJ = tlOBJ.timeMarkers[i]
 			const rgbMaker = [
@@ -234,7 +234,7 @@ export function getPresetsDefinitions(self) {
 					{
 						down: [
 							{
-								actionId: 'makersMove',
+								actionId: 'markersMove',
 								options: {
 									uuid: tmOBJ.uuid,
 								},

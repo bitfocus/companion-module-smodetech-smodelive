@@ -33,8 +33,6 @@ class SmodeLive extends InstanceBase {
 		this.config = config
 		this.smodeLiveData = {
 			prefix: "",
-			connectingConut: 0,
-			getversion: true,
 			onAir: false,
 			ecoMode: false,
 			output: false,
@@ -42,20 +40,9 @@ class SmodeLive extends InstanceBase {
 			staticstics: {},
 			version: {},
 			devices: {},
-			ismuted: [
-				{ id: 'mute', name: 'Mute' },
-				{ id: 'unmute', name: 'Unmute' },
-			],
 			contents: [],
-			objects: [],
 			scenes: {},
-			show: {},
-			timelinesUUID: [],
 			timelines: {},
-			activation: [
-				{ id: 'active', name: 'Active' },
-				{ id: 'inactive', name: 'Inactive' },
-			],
 		}
 
 		this.updateActions() // export actions
