@@ -223,7 +223,7 @@ export function getPresetsDefinitions(self) {
 				type: 'button',
 				category: cat,
 				style: {
-					text: '$(Smode_Live:tl_maker_' + key + '_' + tmOBJ.uuid + '_name)',
+					text: '$(Smode_Live:tl_marker_' + key + '_' + tmOBJ.uuid + '_name)',
 					size: '14',
 					color: colors.colorWhite,
 					bgcolor: combineRgb(rgbMaker[0], rgbMaker[1], rgbMaker[2]),
@@ -243,17 +243,7 @@ export function getPresetsDefinitions(self) {
 						up: [],
 					},
 				],
-				feedbacks: [
-					// {
-					// 	feedbackId: fbTS,
-					// 	options: {
-					// 		activation: tlOBJ.transport.state,
-					// 	},
-					// 	style: {
-					// 		png64: ICON_PAUSE,
-					// 	},
-					// },
-				],
+				feedbacks: [],
 			}
 		}
 	})

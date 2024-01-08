@@ -131,8 +131,8 @@ export const smodeLive = {
 			let makersOBJ = tl[key].timeMarkers
 			for (let i = 0; i < makersOBJ.length; i++) {
 				self.setVariableValues({
-					[`tl_maker_${key}_${makersOBJ[i].uuid}_uuid`]: makersOBJ[i].uuid,
-					[`tl_maker_${key}_${makersOBJ[i].uuid}_name`]: makersOBJ[i].label,
+					[`tl_marker_${key}_${makersOBJ[i].uuid}_uuid`]: makersOBJ[i].uuid,
+					[`tl_marker_${key}_${makersOBJ[i].uuid}_name`]: makersOBJ[i].label,
 				})
 			}
 		})
