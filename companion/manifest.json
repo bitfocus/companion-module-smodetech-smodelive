@@ -5,8 +5,8 @@
 	"description": "Smode Live module for companion",
 	"version": "0.1.0",
 	"license": "MIT",
-	"repository": "git+https://github.com/bitfocus/companion-module-your-module-name.git",
-	"bugs": "https://github.com/bitfocus/companion-module-your-module-name/issues",
+	"repository": "git+https://github.com/bitfocus/companion-module-smodetech-smodelive.git",
+	"bugs": "https://github.com/bitfocus/companion-module-smodetech-smodelive/issues",
 	"maintainers": [
 		{
 			"name": "Nicolas Keesst",
@@ -14,7 +14,7 @@
 		},
 		{
 			"name": "Smode Tech",
-			"email": "contact@smode.fr"
+			"email": "support@smode.io"
 		}
 	],
 	"runtime": {

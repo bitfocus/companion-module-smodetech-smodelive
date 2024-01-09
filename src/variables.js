@@ -103,51 +103,47 @@ export function getVariables() {
 			//this.log('warn', `VARIABLES | TIMELINES >>> ${tl[key].label}`)
 			variables.push({
 				variableId: `tl_${key}_uuid`,
-				name: `${tl[key].label} uuid`,
+				name: `${tl[key].parent} ${tl[key].label} uuid`,
 			})
 			variables.push({
 				variableId: `tl_${key}_activation`,
-				name: `${tl[key].label} activation`,
+				name: `${tl[key].parent} ${tl[key].label} activation`,
 			})
 			variables.push({
 				variableId: `tl_${key}_loading`,
-				name: `${tl[key].label} loading`,
+				name: `${tl[key].parent} ${tl[key].label} loading`,
 			})
 			variables.push({
 				variableId: `tl_${key}_name`,
-				name: `${tl[key].label} name`,
+				name: `${tl[key].parent} ${tl[key].label} name`,
 			})
 			variables.push({
 				variableId: `tl_${key}_parent`,
-				name: `${tl[key].label} parent`,
+				name: `${tl[key].parent} ${tl[key].label} parent`,
 			})
 			// variables.push({
 			// 	variableId: `tl_${key}_color`,
 			// 	name: `${tl[key].parent} ${tl[key].label} color`,
 			// })
 			variables.push({
-				variableId: `tl_${key}_transport_state`,
-				name: `${tl[key].label} transport state`,
+				variableId: `tl_${key}_playing`,
+				name: `${tl[key].parent} ${tl[key].label} playing`,
 			})
 			variables.push({
-				variableId: `tl_${key}_transport_playing`,
-				name: `${tl[key].label} transport playing`,
-			})
-			variables.push({
-				variableId: `tl_${key}_parameters_looping`,
-				name: `${tl[key].label} looping`,
+				variableId: `tl_${key}_looping`,
+				name: `${tl[key].parent} ${tl[key].label} looping`,
 			})
 			// MAKERS VARIABLE
 			let makersOBJ = tl[key].timeMarkers
 			for (let i = 0; i < makersOBJ.length; i++) {
 				//this.log('warn', `VARIABLES | TIMELINES >>> ${tl[key].label}`)
 				variables.push({
-					variableId: `tl_maker_${key}_${makersOBJ[i].uuid}_uuid`,
-					name: `${tl[key].label} ${makersOBJ[i].label} UUID`,
+					variableId: `tl_marker_${key}_${makersOBJ[i].uuid}_uuid`,
+					name: `${tl[key].parent} ${tl[key].label} ${makersOBJ[i].label} UUID`,
 				})
 				variables.push({
-					variableId: `tl_maker_${key}_${makersOBJ[i].uuid}_name`,
-					name: `${tl[key].label} ${makersOBJ[i].label} name`,
+					variableId: `tl_marker_${key}_${makersOBJ[i].uuid}_name`,
+					name: `${tl[key].parent} ${tl[key].label} ${makersOBJ[i].label} name`,
 				})
 			}
 		})
@@ -155,3 +151,80 @@ export function getVariables() {
 
 	return variables
 }
+
+// // CONTENTS
+// if (this.smodeLiveData.contents != []) {
+// 	let contents = this.smodeLiveData.contents
+// 	Object.keys(contents).forEach(async (key) => {
+// 		//this.log('info', `VARIABLES | SCENE >>> ${key}`)
+// 		variables.push({
+// 			variableId: `${contents[key].uuid}_uuid`,
+// 			name: `${contents[key].label} uuid`,
+// 		})
+// 		variables.push({
+// 			variableId: `${contents[key].uuid}_activation`,
+// 			name: `${contents[key].label} activation`,
+// 		})
+// 		variables.push({
+// 			variableId: `${contents[key].uuid}_loading`,
+// 			name: `${contents[key].label} loading`,
+// 		})
+// 		variables.push({
+// 			variableId: `${contents[key].uuid}_name`,
+// 			name: `${contents[key].label} name`,
+// 		})
+// 		// variables.push({
+// 		// 	variableId: `scene_${key}_color`,
+// 		// 	name: `${scenes[key].label} color`,
+// 		// })
+// 		// ACTIONS
+// 		// let actions = contents.actions
+// 		// if (actions != []) {
+// 		// 	variables = await getActionsVariables(variables ,actions, contents[key].label)
+// 		// }
+// 	})
+// }
+
+// async function getActionsVariables(variables, actions, parent) {
+// 	for (let i = 0; i < actions.length; i++) {
+// 		let action = actions[i]
+
+// 		variables.push({
+// 			variableId: `${actions[i].uuid}_uuid`,
+// 			name: `${parent} ${actions[i].label} uuid`,
+// 		})
+// 		variables.push({
+// 			variableId: `${actions[i].uuid}_activation`,
+// 			name: `${tl[key].label} activation`,
+// 		})
+// 		variables.push({
+// 			variableId: `${actions[i].uuid}_loading`,
+// 			name: `${tl[key].label} loading`,
+// 		})
+// 		variables.push({
+// 			variableId: `${actions[i].uuid}_name`,
+// 			name: `${tl[key].label} name`,
+// 		})
+// 		variables.push({
+// 			variableId: `${actions[i].uuid}_parent`,
+// 			name: `${tl[key].label} parent`,
+// 		})
+// 		// variables.push({
+// 		// 	variableId: `tl_${key}_color`,
+// 		// 	name: `${tl[key].parent} ${tl[key].label} color`,
+// 		// })
+// 		variables.push({
+// 			variableId: `${actions[i].uuid}_transport_state`,
+// 			name: `${tl[key].label} transport state`,
+// 		})
+// 		variables.push({
+// 			variableId: `${actions[i].uuid}_transport_playing`,
+// 			name: `${tl[key].label} transport playing`,
+// 		})
+// 		variables.push({
+// 			variableId: `${actions[i].uuid}_parameters_looping`,
+// 			name: `${tl[key].label} looping`,
+// 		})
+// 	}
+// 	return variables
+// }

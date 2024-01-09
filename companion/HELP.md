@@ -16,10 +16,9 @@ Version control 0.1.0
 * Power Save Mode
 
 ##### General Actions
-* Get Scenes
+* Get Contents
 * Get Devices
-* Get Timelines
-* Get STatus
+* Get Status
 * Get Version
 * Get Statistics
 
@@ -32,10 +31,14 @@ Version control 0.1.0
 * Scene Loading Off
 
 ##### Timelines Actions
-* Timeline Play | Pause
+* Timeline Play Toggle
+* Timeline Play
+* Timeline Pause
 * Timeline Reset
+* Timeline Finalize
 * Timeline Next
 * Timeline Previous
+* Timeline Looping
 
 ##### Timelines Markers Actions
 * TimeLines Maker Move
@@ -51,22 +54,23 @@ Version control 0.1.0
 * Power Save Mode
 
 ##### General Presets
-* Get Scenes
+* Get Contents
 * Get Devices
-* Get Timelines
 
 ##### Scenes Preset
 * Scene Activation Toggle
 * Scene Loading Toggle
 
 ##### Timelines Preset
-* Timeline Play | Pause
+* Timeline Play Toggle
 * Timeline Reset
+* Timeline Finalize
 * Timeline Next
 * Timeline Previous
+* Timeline Looping
 
-##### Timelines Markers Preset
-* TimeLines Maker Move
+##### Timeline Markers Preset
+* TimeLine Marker Move
 
 ##### Devices Presets
 *  Devices Mute

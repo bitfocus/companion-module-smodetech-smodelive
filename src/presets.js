@@ -12,19 +12,21 @@ export function getPresetsDefinitions(self) {
 	//
 	Object.keys(self.smodeLiveData.timelines).forEach((key) => {
 		let tlOBJ = self.smodeLiveData.timelines[key]
-		const fbTS = `${key}_transport_state`
-
+		//self.log('info', `PRESET | TIMELINE >>> ${key}_${tlOBJ.label}`)
+		const fbTS = `${key}_playing`
+		const fbLoop = `${key}_loop`
+		let cat = tlOBJ.parent
 		const rgb = [
 			Math.ceil(tlOBJ.colorLabel.red * 255),
 			Math.ceil(tlOBJ.colorLabel.green * 255),
 			Math.ceil(tlOBJ.colorLabel.blue * 255),
 		]
 
-		presets[`${key}_transport_state`] = {
+		presets[`${key}_playing`] = {
 			type: 'button',
-			category: 'TimeLines',
+			category: cat,
 			style: {
-				text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
+				text: '$(Smode_Live:tl_' + key + '_name)',
 				size: '14',
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
@@ -35,7 +37,7 @@ export function getPresetsDefinitions(self) {
 				{
 					down: [
 						{
-							actionId: 'tlTransportPlaying',
+							actionId: 'tlPlayingToggle',
 							options: {
 								name: tlOBJ.label,
 								uuid: key,
@@ -60,9 +62,9 @@ export function getPresetsDefinitions(self) {
 
 		presets[`${key}_reset`] = {
 			type: 'button',
-			category: 'TimeLines',
+			category: cat,
 			style: {
-				text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
+				text: '$(Smode_Live:tl_' + key + '_name)',
 				size: '14',
 				color: colors.colorWhite,
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
@@ -88,9 +90,9 @@ export function getPresetsDefinitions(self) {
 
 		presets[`${key}_finalize`] = {
 			type: 'button',
-			category: 'TimeLines',
+			category: cat,
 			style: {
-				text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
+				text: '$(Smode_Live:tl_' + key + '_name)',
 				size: '14',
 				color: colors.colorWhite,
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
@@ -116,9 +118,9 @@ export function getPresetsDefinitions(self) {
 
 		presets[`${key}_next`] = {
 			type: 'button',
-			category: 'TimeLines',
+			category: cat,
 			style: {
-				text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
+				text: '$(Smode_Live:tl_' + key + '_name)',
 				size: '14',
 				color: colors.colorWhite,
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
@@ -144,9 +146,9 @@ export function getPresetsDefinitions(self) {
 
 		presets[`${key}_previous`] = {
 			type: 'button',
-			category: 'TimeLines',
+			category: cat,
 			style: {
-				text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
+				text: '$(Smode_Live:tl_' + key + '_name)',
 				size: '14',
 				color: colors.colorWhite,
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
@@ -172,7 +174,7 @@ export function getPresetsDefinitions(self) {
 
 		presets[`${key}_looping`] = {
 			type: 'button',
-			category: 'TimeLines',
+			category: cat,
 			style: {
 				text: '$(Smode_Live:tl_' + key + '_name)',
 				size: '14',
@@ -197,7 +199,7 @@ export function getPresetsDefinitions(self) {
 			],
 			feedbacks: [
 				{
-					feedbackId: `${key}_loop`,
+					feedbackId: fbLoop,
 					options: {
 						activation: tlOBJ.parameters.looping,
 					},
@@ -207,21 +209,21 @@ export function getPresetsDefinitions(self) {
 				},
 			],
 		}
-
-		// MAKERS
+		//self.log('debug', `PRESETS | TIMELINE MAKERS >>> ${tlOBJ.timeMarkers.length} ${JSON.stringify(tlOBJ.timeMarkers, null, 4)}`)
+		// MARKERS
 		for (let i = 0; i < tlOBJ.timeMarkers.length; i++) {
 			let tmOBJ = tlOBJ.timeMarkers[i]
 			const rgbMaker = [
-				Math.ceil(tmOBJ.color.red * 255),
-				Math.ceil(tmOBJ.color.green * 255),
-				Math.ceil(tmOBJ.color.blue * 255),
+				Math.ceil(tmOBJ.colorLabel.red * 255),
+				Math.ceil(tmOBJ.colorLabel.green * 255),
+				Math.ceil(tmOBJ.colorLabel.blue * 255),
 			]
-			//self.log('debug', `PRESETS | GET TIMELINE TIME MAKERS >>> ${JSON.stringify(tmOBJ, null, 4)}`)
-			presets[`${tmOBJ.label}_${tmOBJ.position}_timemaker`] = {
+			//self.log('debug', `PRESETS | TIMELINE MAKERS >>> ${JSON.stringify(tmOBJ, null, 4)}`)
+			presets[`${tmOBJ.label}_${cat}_timemaker`] = {
 				type: 'button',
-				category: 'TimeLines',
+				category: cat,
 				style: {
-					text: '$(Smode_Live:tl_maker_'+ key + '_' + tmOBJ.uuid + '_name)',
+					text: '$(Smode_Live:tl_marker_' + key + '_' + tmOBJ.uuid + '_name)',
 					size: '14',
 					color: colors.colorWhite,
 					bgcolor: combineRgb(rgbMaker[0], rgbMaker[1], rgbMaker[2]),
@@ -232,7 +234,7 @@ export function getPresetsDefinitions(self) {
 					{
 						down: [
 							{
-								actionId: 'makersMove',
+								actionId: 'markersMove',
 								options: {
 									uuid: tmOBJ.uuid,
 								},
@@ -241,17 +243,7 @@ export function getPresetsDefinitions(self) {
 						up: [],
 					},
 				],
-				feedbacks: [
-					// {
-					// 	feedbackId: fbTS,
-					// 	options: {
-					// 		activation: tlOBJ.transport.state,
-					// 	},
-					// 	style: {
-					// 		png64: ICON_PAUSE,
-					// 	},
-					// },
-				],
+				feedbacks: [],
 			}
 		}
 	})
@@ -271,9 +263,6 @@ export function getPresetsDefinitions(self) {
 			Math.ceil(sceneOBJ.colorLabel.green * 255),
 			Math.ceil(sceneOBJ.colorLabel.blue * 255),
 		]
-
-		const c1 = '$(Smode_Live:scene_' + key + '_color)'
-		self.log('debug', `PRESETS | SCENES | COLOR >>> ${c1}`)
 
 		presets[`${key}_activation`] = {
 			type: 'button',
@@ -308,7 +297,7 @@ export function getPresetsDefinitions(self) {
 					style: {
 						png64: icons.ICON_OCULUS_CLOSE,
 					},
-				}
+				},
 			],
 		}
 
@@ -348,58 +337,6 @@ export function getPresetsDefinitions(self) {
 				},
 			],
 		}
-
-		// if (sceneOBJ.tools.length !== 0) {
-		// 	for (let i = 0; i < sceneOBJ.tools.length; i++) {
-		// 		if (sceneOBJ.tools[i].states.length !== 0) {
-		// 			self.log(
-		// 				'warn',
-		// 				`SMODELIVE | SMODELIVE DATA SCENES RESULT >>>\nScene Name: ${sceneOBJ.label}\nTools Name: ${
-		// 					sceneOBJ.tools[i].label
-		// 				}\nStates:\n${JSON.stringify(sceneOBJ.tools[i], null, 4)}`
-		// 			)
-		// 			let states = sceneOBJ.tools[i].states
-		// 			for (let j = 0; j < states.length; j++) {
-		// 				presets[`${key}_${sceneOBJ.tools[i].label}_${j}_parameters_states`] = {
-		// 					type: 'button',
-		// 					category: `${sceneOBJ.label}`,
-		// 					style: {
-		// 						text: `${states[j].label}`,
-		// 						size: '14',
-		// 						color: colors.colorWhite,
-		// 						bgcolor: colors.colorBlack,
-		// 						// alignment: 'center:top',
-		// 						// png64: icons.ICON_OCULUS_OPEN,
-		// 					},
-		// 					steps: [
-		// 						{
-		// 							down: [
-		// 								// {
-		// 								// 	actionId: 'sceneLoadingToogle',
-		// 								// 	options: {
-		// 								// 		uuid: key,
-		// 								// 	},
-		// 								// },
-		// 							],
-		// 							up: [],
-		// 						},
-		// 					],
-		// 					feedbacks: [
-		// 						{
-		// 							// feedbackId: fbLD,
-		// 							// options: {
-		// 							// 	loading: sceneOBJ.loading,
-		// 							// },
-		// 							// style: {
-		// 							// 	png64: icons.ICON_OCULUS_CLOSE,
-		// 							// },
-		// 						},
-		// 					],
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// }
 	})
 
 	//██████  ███████ ██    ██ ██  ██████ ███████ ███████
@@ -695,11 +632,11 @@ export function getPresetsDefinitions(self) {
 	}
 
 	// GENERAL
-	presets['getScenes'] = {
+	presets['getContents'] = {
 		type: 'button',
 		category: 'General',
 		style: {
-			text: `Get\nScenes`,
+			text: `Get\nContents`,
 			size: '14',
 			color: colors.colorWhite,
 			bgcolor: colors.colorBlack,
@@ -708,7 +645,7 @@ export function getPresetsDefinitions(self) {
 			{
 				down: [
 					{
-						actionId: 'getScenesActions',
+						actionId: 'getContentsAction',
 					},
 				],
 				up: [],
@@ -739,27 +676,431 @@ export function getPresetsDefinitions(self) {
 		feedbacks: [],
 	}
 
-	presets['getTimeLines'] = {
-		type: 'button',
-		category: 'General',
-		style: {
-			text: `Get\nTimeLines`,
-			size: '14',
-			color: colors.colorWhite,
-			bgcolor: colors.colorBlack,
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: 'getTimelinesActions',
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	}
-
 	return presets
 }
+
+	// presets['getScenes'] = {
+	// 	type: 'button',
+	// 	category: 'General',
+	// 	style: {
+	// 		text: `Get\nScenes`,
+	// 		size: '14',
+	// 		color: colors.colorWhite,
+	// 		bgcolor: colors.colorBlack,
+	// 	},
+	// 	steps: [
+	// 		{
+	// 			down: [
+	// 				{
+	// 					actionId: 'getScenesActions',
+	// 				},
+	// 			],
+	// 			up: [],
+	// 		},
+	// 	],
+	// 	feedbacks: [],
+	// }
+
+	// presets['getTimeLines'] = {
+	// 	type: 'button',
+	// 	category: 'General',
+	// 	style: {
+	// 		text: `Get\nTimeLines`,
+	// 		size: '14',
+	// 		color: colors.colorWhite,
+	// 		bgcolor: colors.colorBlack,
+	// 	},
+	// 	steps: [
+	// 		{
+	// 			down: [
+	// 				{
+	// 					actionId: 'getTimelinesActions',
+	// 				},
+	// 			],
+	// 			up: [],
+	// 		},
+	// 	],
+	// 	feedbacks: [],
+	// }
+
+			// if (sceneOBJ.tools.length !== 0) {
+		// 	for (let i = 0; i < sceneOBJ.tools.length; i++) {
+		// 		if (sceneOBJ.tools[i].states.length !== 0) {
+		// 			self.log(
+		// 				'warn',
+		// 				`SMODELIVE | SMODELIVE DATA SCENES RESULT >>>\nScene Name: ${sceneOBJ.label}\nTools Name: ${
+		// 					sceneOBJ.tools[i].label
+		// 				}\nStates:\n${JSON.stringify(sceneOBJ.tools[i], null, 4)}`
+		// 			)
+		// 			let states = sceneOBJ.tools[i].states
+		// 			for (let j = 0; j < states.length; j++) {
+		// 				presets[`${key}_${sceneOBJ.tools[i].label}_${j}_parameters_states`] = {
+		// 					type: 'button',
+		// 					category: `${sceneOBJ.label}`,
+		// 					style: {
+		// 						text: `${states[j].label}`,
+		// 						size: '14',
+		// 						color: colors.colorWhite,
+		// 						bgcolor: colors.colorBlack,
+		// 						// alignment: 'center:top',
+		// 						// png64: icons.ICON_OCULUS_OPEN,
+		// 					},
+		// 					steps: [
+		// 						{
+		// 							down: [
+		// 								// {
+		// 								// 	actionId: 'sceneLoadingToogle',
+		// 								// 	options: {
+		// 								// 		uuid: key,
+		// 								// 	},
+		// 								// },
+		// 							],
+		// 							up: [],
+		// 						},
+		// 					],
+		// 					feedbacks: [
+		// 						{
+		// 							// feedbackId: fbLD,
+		// 							// options: {
+		// 							// 	loading: sceneOBJ.loading,
+		// 							// },
+		// 							// style: {
+		// 							// 	png64: icons.ICON_OCULUS_CLOSE,
+		// 							// },
+		// 						},
+		// 					],
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
+
+			// CONTENTS
+	// Object.keys(self.smodeLiveData.contents).forEach((key) => {
+	// 	let ctOBJ = self.smodeLiveData.contents[key]
+	// 	self.log('info', `PRESETS | CONTENTS >>> ${JSON.stringify(ctOBJ, null, 4)}`)
+	// 	const fbAC = `${ctOBJ.uuid}_activation`
+	// 	const fbLD = `${ctOBJ.uuid}_loading`
+	// 	const rgb = [
+	// 		Math.ceil(ctOBJ.colorLabel.red * 255),
+	// 		Math.ceil(ctOBJ.colorLabel.green * 255),
+	// 		Math.ceil(ctOBJ.colorLabel.blue * 255),
+	// 	]
+
+	// 	presets[fbAC] = {
+	// 		type: 'button',
+	// 		category: `${ctOBJ.label}`,
+	// 		style: {
+	// 			text: '$(Smode_Live:' + ctOBJ.uuid + '_name)\nActivation',
+	// 			size: '14',
+	// 			color: colors.colorWhite,
+	// 			bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+	// 			alignment: 'center:top',
+	// 			png64: icons.ICON_OCULUS_OPEN,
+	// 		},
+	// 		steps: [
+	// 			{
+	// 				down: [
+	// 					{
+	// 						actionId: 'sceneActivationToggle',
+	// 						options: {
+	// 							uuid: ctOBJ.uuid,
+	// 						},
+	// 					},
+	// 				],
+	// 				up: [],
+	// 			},
+	// 		],
+	// 		feedbacks: [
+	// 			{
+	// 				feedbackId: fbAC,
+	// 				options: {
+	// 					activation: ctOBJ.activation,
+	// 				},
+	// 				style: {
+	// 					png64: icons.ICON_OCULUS_CLOSE,
+	// 				},
+	// 			},
+	// 		],
+	// 	}
+
+	// 	presets[fbLD] = {
+	// 		type: 'button',
+	// 		category: `${ctOBJ.label}`,
+	// 		style: {
+	// 			text: '$(Smode_Live:' + ctOBJ.uuid + '_name)\nLoading',
+	// 			size: '14',
+	// 			color: colors.colorWhite,
+	// 			bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+	// 			alignment: 'center:top',
+	// 			png64: icons.ICON_OCULUS_OPEN,
+	// 		},
+	// 		steps: [
+	// 			{
+	// 				down: [
+	// 					{
+	// 						actionId: 'sceneLoadingToogle',
+	// 						options: {
+	// 							uuid: ctOBJ.uuid,
+	// 						},
+	// 					},
+	// 				],
+	// 				up: [],
+	// 			},
+	// 		],
+	// 		feedbacks: [
+	// 			{
+	// 				feedbackId: fbLD,
+	// 				options: {
+	// 					loading: ctOBJ.loading,
+	// 				},
+	// 				style: {
+	// 					png64: icons.ICON_OCULUS_CLOSE,
+	// 				},
+	// 			},
+	// 		],
+	// 	}
+
+	// 	//const fbTS = `${key}_transport_state`
+
+	// 	// const rgb = [
+	// 	// 	Math.ceil(tlOBJ.colorLabel.red * 255),
+	// 	// 	Math.ceil(tlOBJ.colorLabel.green * 255),
+	// 	// 	Math.ceil(tlOBJ.colorLabel.blue * 255),
+	// 	// ]
+
+	// 	// presets[`${key}_transport_state`] = {
+	// 	// 	type: 'button',
+	// 	// 	category: 'TimeLines',
+	// 	// 	style: {
+	// 	// 		text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
+	// 	// 		size: '14',
+	// 	// 		color: combineRgb(255, 255, 255),
+	// 	// 		bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+	// 	// 		alignment: 'center:top',
+	// 	// 		png64: icons.ICON_PLAY,
+	// 	// 	},
+	// 	// 	steps: [
+	// 	// 		{
+	// 	// 			down: [
+	// 	// 				{
+	// 	// 					actionId: 'tlTransportPlaying',
+	// 	// 					options: {
+	// 	// 						name: tlOBJ.label,
+	// 	// 						uuid: key,
+	// 	// 					},
+	// 	// 				},
+	// 	// 			],
+	// 	// 			up: [],
+	// 	// 		},
+	// 	// 	],
+	// 	// 	feedbacks: [
+	// 	// 		{
+	// 	// 			feedbackId: fbTS,
+	// 	// 			options: {
+	// 	// 				activation: tlOBJ.transport.state,
+	// 	// 			},
+	// 	// 			style: {
+	// 	// 				png64: icons.ICON_PAUSE,
+	// 	// 			},
+	// 	// 		},
+	// 	// 	],
+	// 	// }
+
+	// 	// presets[`${key}_reset`] = {
+	// 	// 	type: 'button',
+	// 	// 	category: 'TimeLines',
+	// 	// 	style: {
+	// 	// 		text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
+	// 	// 		size: '14',
+	// 	// 		color: colors.colorWhite,
+	// 	// 		bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+	// 	// 		alignment: 'center:top',
+	// 	// 		png64: icons.ICON_RESET,
+	// 	// 	},
+	// 	// 	steps: [
+	// 	// 		{
+	// 	// 			down: [
+	// 	// 				{
+	// 	// 					actionId: 'tlReset',
+	// 	// 					options: {
+	// 	// 						name: tlOBJ.label,
+	// 	// 						uuid: key,
+	// 	// 					},
+	// 	// 				},
+	// 	// 			],
+	// 	// 			up: [],
+	// 	// 		},
+	// 	// 	],
+	// 	// 	feedbacks: [],
+	// 	// }
+
+	// 	// presets[`${key}_finalize`] = {
+	// 	// 	type: 'button',
+	// 	// 	category: 'TimeLines',
+	// 	// 	style: {
+	// 	// 		text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
+	// 	// 		size: '14',
+	// 	// 		color: colors.colorWhite,
+	// 	// 		bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+	// 	// 		alignment: 'center:top',
+	// 	// 		png64: icons.ICON_FINALIZE,
+	// 	// 	},
+	// 	// 	steps: [
+	// 	// 		{
+	// 	// 			down: [
+	// 	// 				{
+	// 	// 					actionId: 'tlFinalize',
+	// 	// 					options: {
+	// 	// 						name: tlOBJ.label,
+	// 	// 						uuid: key,
+	// 	// 					},
+	// 	// 				},
+	// 	// 			],
+	// 	// 			up: [],
+	// 	// 		},
+	// 	// 	],
+	// 	// 	feedbacks: [],
+	// 	// }
+
+	// 	// presets[`${key}_next`] = {
+	// 	// 	type: 'button',
+	// 	// 	category: 'TimeLines',
+	// 	// 	style: {
+	// 	// 		text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
+	// 	// 		size: '14',
+	// 	// 		color: colors.colorWhite,
+	// 	// 		bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+	// 	// 		alignment: 'center:top',
+	// 	// 		png64: icons.ICON_NEXT,
+	// 	// 	},
+	// 	// 	steps: [
+	// 	// 		{
+	// 	// 			down: [
+	// 	// 				{
+	// 	// 					actionId: 'tlNext',
+	// 	// 					options: {
+	// 	// 						name: tlOBJ.label,
+	// 	// 						uuid: key,
+	// 	// 					},
+	// 	// 				},
+	// 	// 			],
+	// 	// 			up: [],
+	// 	// 		},
+	// 	// 	],
+	// 	// 	feedbacks: [],
+	// 	// }
+
+	// 	// presets[`${key}_previous`] = {
+	// 	// 	type: 'button',
+	// 	// 	category: 'TimeLines',
+	// 	// 	style: {
+	// 	// 		text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
+	// 	// 		size: '14',
+	// 	// 		color: colors.colorWhite,
+	// 	// 		bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+	// 	// 		alignment: 'center:top',
+	// 	// 		png64: icons.ICON_PREVIOUS,
+	// 	// 	},
+	// 	// 	steps: [
+	// 	// 		{
+	// 	// 			down: [
+	// 	// 				{
+	// 	// 					actionId: 'tlPrevious',
+	// 	// 					options: {
+	// 	// 						name: tlOBJ.label,
+	// 	// 						uuid: key,
+	// 	// 					},
+	// 	// 				},
+	// 	// 			],
+	// 	// 			up: [],
+	// 	// 		},
+	// 	// 	],
+	// 	// 	feedbacks: [],
+	// 	// }
+
+	// 	// presets[`${key}_looping`] = {
+	// 	// 	type: 'button',
+	// 	// 	category: 'TimeLines',
+	// 	// 	style: {
+	// 	// 		text: '$(Smode_Live:tl_' + key + '_name)',
+	// 	// 		size: '14',
+	// 	// 		color: colors.colorWhite,
+	// 	// 		bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+	// 	// 		alignment: 'center:top',
+	// 	// 		png64: icons.ICON_LOOP_OFF,
+	// 	// 	},
+	// 	// 	steps: [
+	// 	// 		{
+	// 	// 			down: [
+	// 	// 				{
+	// 	// 					actionId: 'tlLooping',
+	// 	// 					options: {
+	// 	// 						name: tlOBJ.label,
+	// 	// 						uuid: key,
+	// 	// 					},
+	// 	// 				},
+	// 	// 			],
+	// 	// 			up: [],
+	// 	// 		},
+	// 	// 	],
+	// 	// 	feedbacks: [
+	// 	// 		{
+	// 	// 			feedbackId: `${key}_loop`,
+	// 	// 			options: {
+	// 	// 				activation: tlOBJ.parameters.looping,
+	// 	// 			},
+	// 	// 			style: {
+	// 	// 				png64: icons.ICON_LOOP_ON,
+	// 	// 			},
+	// 	// 		},
+	// 	// 	],
+	// 	// }
+
+	// 	// // MAKERS
+	// 	// for (let i = 0; i < tlOBJ.timeMarkers.length; i++) {
+	// 	// 	let tmOBJ = tlOBJ.timeMarkers[i]
+	// 	// 	const rgbMaker = [
+	// 	// 		Math.ceil(tmOBJ.color.red * 255),
+	// 	// 		Math.ceil(tmOBJ.color.green * 255),
+	// 	// 		Math.ceil(tmOBJ.color.blue * 255),
+	// 	// 	]
+	// 	// 	//self.log('debug', `PRESETS | GET TIMELINE TIME MAKERS >>> ${JSON.stringify(tmOBJ, null, 4)}`)
+	// 	// 	presets[`${tmOBJ.label}_${tmOBJ.position}_timemaker`] = {
+	// 	// 		type: 'button',
+	// 	// 		category: 'TimeLines',
+	// 	// 		style: {
+	// 	// 			text: '$(Smode_Live:tl_maker_'+ key + '_' + tmOBJ.uuid + '_name)',
+	// 	// 			size: '14',
+	// 	// 			color: colors.colorWhite,
+	// 	// 			bgcolor: combineRgb(rgbMaker[0], rgbMaker[1], rgbMaker[2]),
+	// 	// 			alignment: 'center:top',
+	// 	// 			png64: icons.ICON_TIME_MAKERS,
+	// 	// 		},
+	// 	// 		steps: [
+	// 	// 			{
+	// 	// 				down: [
+	// 	// 					{
+	// 	// 						actionId: 'makersMove',
+	// 	// 						options: {
+	// 	// 							uuid: tmOBJ.uuid,
+	// 	// 						},
+	// 	// 					},
+	// 	// 				],
+	// 	// 				up: [],
+	// 	// 			},
+	// 	// 		],
+	// 	// 		feedbacks: [
+	// 	// 			// {
+	// 	// 			// 	feedbackId: fbTS,
+	// 	// 			// 	options: {
+	// 	// 			// 		activation: tlOBJ.transport.state,
+	// 	// 			// 	},
+	// 	// 			// 	style: {
+	// 	// 			// 		png64: ICON_PAUSE,
+	// 	// 			// 	},
+	// 	// 			// },
+	// 	// 		],
+	// 	// 	}
+	// 	// }
+	// })

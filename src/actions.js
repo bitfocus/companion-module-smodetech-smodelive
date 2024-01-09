@@ -4,6 +4,21 @@ import { HttpPatchOptions, HttpPostOptions } from './httpObject.js'
 
 export function getActionDefinitions(self) {
 	self.setActionDefinitions({
+		// ██████  ██████  ███    ██ ████████ ███████ ███    ██ ████████ ███████ 
+		// ██      ██    ██ ████   ██    ██    ██      ████   ██    ██    ██      
+		// ██      ██    ██ ██ ██  ██    ██    █████   ██ ██  ██    ██    ███████ 
+		// ██      ██    ██ ██  ██ ██    ██    ██      ██  ██ ██    ██         ██ 
+		//  ██████  ██████  ██   ████    ██    ███████ ██   ████    ██    ███████ 
+		// 
+		getContentsAction: {
+			name: 'Get Contents',
+			tooltip: 'Smode Live Get Contents',
+			options: [],
+			callback: async (action, context) => {
+				await smodeLive.getContents(self)
+			},
+		},
+
 		//████████ ██ ███    ███ ███████ ██      ██ ███    ██ ███████ ███████
 		//   ██    ██ ████  ████ ██      ██      ██ ████   ██ ██      ██
 		//   ██    ██ ██ ████ ██ █████   ██      ██ ██ ██  ██ █████   ███████
@@ -15,13 +30,13 @@ export function getActionDefinitions(self) {
 			tooltip: 'Smode Live Get TimeLines',
 			options: [],
 			callback: async (action, context) => {
-				await smodeLive.getTimelinesUUID(self)
+				await smodeLive.getTimelinesList(self)
 			},
 		},
 
-		makersMove: {
-			name: 'TimeLines Maker Move',
-			tooltip: 'TimeLines Maker Move',
+		markersMove: {
+			name: 'TimeLines Marker Move',
+			tooltip: 'TimeLines Marker Move',
 			options: [
 				{
 					id: 'uuid',
@@ -34,30 +49,30 @@ export function getActionDefinitions(self) {
 				// AXIOS
 				const postOptions = new HttpPostOptions(
 					self,
-					'TL_MOVE',
-					`/api/live/timelines/markers/${action.options.uuid}/move`
+					'MARKERMOVE',
+					`/api/live/animations/${action.options.uuid}/move`
 				)
 				axios
 					.request(postOptions)
 					.then(async function (response) {
-						// console.log(response.data)
-						// console.log(response.status)
-						// console.log(response.statusText)
-						// console.log(response.headers)
-						// console.log(response.config)
+						console.log(response.data)
+						console.log(response.status)
+						console.log(response.statusText)
+						console.log(response.headers)
+						console.log(response.config)
 						if (response.status === 200) {
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'TLMOVE', error)
+						
+						smodeLive.actionsError(self, 'MARKERMOVE', error)
 					})
 			},
 		},
 
-		tlTransportPlaying: {
-			name: 'TimeLines Play Pause',
-			tooltip: 'TimeLines Play Pause',
+		tlPlayingToggle: {
+			name: 'TimeLine Play Pause',
+			tooltip: 'TimeLine Play Pause',
 			options: [
 				{
 					id: 'uuid',
@@ -68,24 +83,105 @@ export function getActionDefinitions(self) {
 			],
 			callback: async (action, context) => {
 				let val = 'play'
-				if (self.getVariableValue(`tl_${action.options.uuid}_transport_playing`) === true) val = 'pause'
+				if (self.getVariableValue(`tl_${action.options.uuid}_playing`) === true) val = 'pause'
 				// AXIOS
 				const postOptions = new HttpPostOptions(
 					self,
-					'TL_PLAYING',
-					`/api/live/trigger/${action.options.uuid}?variablePath==transport.${val}`
+					'TLPLAYING',
+					`/api/live/animations/${action.options.uuid}/trigger?state=${val}`
 				)
 				axios
 					.request(postOptions)
 					.then(async function (response) {
+						console.log(response.data)
+						console.log(response.status)
+						console.log(response.statusText)
+						console.log(response.headers)
+						console.log(response.config)
 						if (response.status === 200) {
-							await smodeLive.getTimelinesUUID(self)
+							let tl = self.smodeLiveData.timelines
+							tl[action.options.uuid].transport.playing = response.data.transport.playing
 							await smodeLive.checkTimeLinesVariables(self)
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'TLPLAYING', error)
+						smodeLive.actionsError(self, 'TLPLAYING', error)
+					})
+			},
+		},
+
+		tlPlay: {
+			name: 'TimeLine Play',
+			tooltip: 'TimeLine Play',
+			options: [
+				{
+					id: 'uuid',
+					type: 'textinput',
+					label: 'UUID',
+					default: '0',
+				},
+			],
+			callback: async (action, context) => {
+				// AXIOS
+				const postOptions = new HttpPostOptions(
+					self,
+					'TLPLAY',
+					`/api/live/animations/${action.options.uuid}/trigger?state=play`
+				)
+				axios
+					.request(postOptions)
+					.then(async function (response) {
+						// console.log(response.data)
+						// console.log(response.status)
+						// console.log(response.statusText)
+						// console.log(response.headers)
+						// console.log(response.config)
+						if (response.status === 200) {
+							let tl = self.smodeLiveData.timelines
+							tl[action.options.uuid].transport.playing = response.data.transport.playing
+							await smodeLive.checkTimeLinesVariables(self)
+						}
+					})
+					.catch(function (error) {
+						smodeLive.actionsError(self, 'TLPLAY', error)
+					})
+			},
+		},
+
+		tlPause: {
+			name: 'TimeLine Pause',
+			tooltip: 'TimeLine Pause',
+			options: [
+				{
+					id: 'uuid',
+					type: 'textinput',
+					label: 'UUID',
+					default: '0',
+				},
+			],
+			callback: async (action, context) => {
+				// AXIOS
+				const postOptions = new HttpPostOptions(
+					self,
+					'TLPAUSE',
+					`/api/live/animations/${action.options.uuid}/trigger?state=pause`
+				)
+				axios
+					.request(postOptions)
+					.then(async function (response) {
+						// console.log(response.data)
+						// console.log(response.status)
+						// console.log(response.statusText)
+						// console.log(response.headers)
+						// console.log(response.config)
+						if (response.status === 200) {
+							let tl = self.smodeLiveData.timelines
+							tl[action.options.uuid].transport.playing = response.data.transport.playing
+							await smodeLive.checkTimeLinesVariables(self)
+						}
+					})
+					.catch(function (error) {
+						smodeLive.actionsError(self, 'TLPAUSE', error)
 					})
 			},
 		},
@@ -106,17 +202,19 @@ export function getActionDefinitions(self) {
 				const postOptions = new HttpPostOptions(
 					self,
 					'TL_RESET',
-					`/api/live/trigger/${action.options.uuid}?variablePath=transport.reset`
+					`/api/live/animations/${action.options.uuid}/trigger?state=reset`
 				)
 				axios
 					.request(postOptions)
 					.then(async function (response) {
 						if (response.status === 200) {
+							let tl = self.smodeLiveData.timelines
+							tl[action.options.uuid].transport.playing = response.data.transport.playing
+							await smodeLive.checkTimeLinesVariables(self)
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'TLRESET', error)
+						smodeLive.actionsError(self, 'TLRESET', error)
 					})
 			},
 		},
@@ -137,17 +235,19 @@ export function getActionDefinitions(self) {
 				const postOptions = new HttpPostOptions(
 					self,
 					'TL_FINALIZE',
-					`/api/live/trigger/${action.options.uuid}?variablePath=transport.finalize`
+					`/api/live/animations/${action.options.uuid}/trigger?state=finalize`
 				)
 				axios
 					.request(postOptions)
 					.then(async function (response) {
 						if (response.status === 200) {
+							let tl = self.smodeLiveData.timelines
+							tl[action.options.uuid].transport.playing = response.data.transport.playing
+							await smodeLive.checkTimeLinesVariables(self)
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'TLFINALIZE', error)
+						smodeLive.actionsError(self, 'TLFINALIZE', error)
 					})
 			},
 		},
@@ -168,17 +268,19 @@ export function getActionDefinitions(self) {
 				const postOptions = new HttpPostOptions(
 					self,
 					'TL_NEXT',
-					`/api/live/trigger/${action.options.uuid}?variablePath=transport.next`
+					`/api/live/animations/${action.options.uuid}/trigger?state=next`
 				)
 				axios
 					.request(postOptions)
 					.then(async function (response) {
 						if (response.status === 200) {
+							let tl = self.smodeLiveData.timelines
+							tl[action.options.uuid].transport.playing = response.data.transport.playing
+							await smodeLive.checkTimeLinesVariables(self)
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'TLNEXT', error)
+						smodeLive.actionsError(self, 'TLNEXT', error)
 					})
 			},
 		},
@@ -199,17 +301,19 @@ export function getActionDefinitions(self) {
 				const postOptions = new HttpPostOptions(
 					self,
 					'TL_PREVIOUS',
-					`/api/live/trigger/${action.options.uuid}?variablePath=transport.previous`,
+					`/api/live/animations/${action.options.uuid}/trigger?state=previous`
 				)
 				axios
 					.request(postOptions)
 					.then(async function (response) {
 						if (response.status === 200) {
+							let tl = self.smodeLiveData.timelines
+							tl[action.options.uuid].transport.playing = response.data.transport.playing
+							await smodeLive.checkTimeLinesVariables(self)
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'TLPREVIOUS', error)
+						smodeLive.actionsError(self, 'TLPREVIOUS', error)
 					})
 			},
 		},
@@ -227,17 +331,17 @@ export function getActionDefinitions(self) {
 			],
 			callback: async (action, context) => {
 				let val = true
-				if (self.getVariableValue(`tl_${action.options.uuid}_parameters_looping`) === true) val = false
+				if (self.getVariableValue(`tl_${action.options.uuid}_looping`) === true) val = false
 				// AXIOS
 				const patchOptions = new HttpPatchOptions(
 					self,
 					'TL_LOOPING',
 					`/api/live/objects/${action.options.uuid}?variablePath=parameters.looping`,
-					{ value: val },
+					{ value: val }
 				)
 
-				self.log("info", `ACTIONS | TL LOOPING >>> ${patchOptions.url}\n${JSON.stringify(patchOptions.data,null,4)} `)
-	
+				self.log('info', `ACTIONS | TL LOOPING >>> ${patchOptions.url}\n${JSON.stringify(patchOptions.data, null, 4)} `)
+
 				axios
 					.request(patchOptions)
 					.then(async function (response) {
@@ -247,13 +351,13 @@ export function getActionDefinitions(self) {
 						console.log(response.headers)
 						console.log(response.config)
 						if (response.status === 200) {
-							await smodeLive.getTimelinesUUID(self)
+							let tl = self.smodeLiveData.timelines
+							tl[action.options.uuid].parameters.looping = response.data.parameters.looping
 							await smodeLive.checkTimeLinesVariables(self)
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'TLLOOPING', error)
+						smodeLive.actionsError(self, 'TLLOOPING', error)
 					})
 			},
 		},
@@ -270,7 +374,7 @@ export function getActionDefinitions(self) {
 			tooltip: 'Smode Live Get Scenes',
 			options: [],
 			callback: async (action, context) => {
-				await smodeLive.getObjects(self, 'Scene')
+				await smodeLive.getScenesInContents(self)
 			},
 		},
 
@@ -287,9 +391,13 @@ export function getActionDefinitions(self) {
 				},
 			],
 			callback: async (action, context) => {
-				let scenes = self.smodeLiveData.scenes
+				let contents = self.smodeLiveData.scenes
 				let val = false
 				if (self.getVariableValue(`scene_${action.options.uuid}_activation`) === 'inactive') val = true
+				self.log(
+					'info',
+					`ACTIONS | SCENE ACTIVATION TOGGLE >>> ${self.getVariableValue(`scene_${action.options.uuid}_activation`)}`
+				)
 				// AXIOS
 				const patchOptions = new HttpPatchOptions(
 					self,
@@ -298,7 +406,10 @@ export function getActionDefinitions(self) {
 					{ value: val }
 				)
 
-				//self.log("info", `ACTIONS | SCENE ACTIVATION TOGGLE >>> ${patchOptions.url}\n${JSON.stringify(patchOptions.data,null,4)} `)
+				self.log(
+					'info',
+					`ACTIONS | CONTENTS ACTIVATION TOGGLE >>> ${patchOptions.url}\n${JSON.stringify(patchOptions.data, null, 4)} `
+				)
 
 				axios
 					.request(patchOptions)
@@ -309,24 +420,23 @@ export function getActionDefinitions(self) {
 						console.log(response.headers)
 						console.log(response.config)
 						if (response.status === 200) {
-							Object.keys(scenes).forEach((key) => {
+							Object.keys(contents).forEach((key) => {
 								if ((key = action.options.uuid)) {
-									scenes[key].activation = response.data.activation
+									contents[key].activation = response.data.activation
 									smodeLive.checkSceneVariables(self)
 								}
 							})
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'SCENEACTIVETOOGLE', error)
+						smodeLive.actionsError(self, 'CONTENTACTIVETOOGLE', error)
 					})
 			},
 		},
 
 		sceneActivationOn: {
-			name: 'Scene Activation On',
-			tooltip: 'Scene Activation On',
+			name: 'Contents Activation On',
+			tooltip: 'Contents Activation On',
 			options: [
 				{
 					id: 'uuid',
@@ -336,11 +446,11 @@ export function getActionDefinitions(self) {
 				},
 			],
 			callback: async (action, context) => {
-				let scenes = self.smodeLiveData.scenes
+				let contents = self.smodeLiveData.scenes
 				// AXIOS
 				const patchOptions = new HttpPatchOptions(
 					self,
-					'SCENEACTIVEON',
+					'CONTENTACTIVEON',
 					`/api/live/objects/${action.options.uuid}?variablePath=activation`,
 					{ value: true }
 				)
@@ -348,24 +458,23 @@ export function getActionDefinitions(self) {
 					.request(patchOptions)
 					.then(async function (response) {
 						if (response.status === 200) {
-							Object.keys(scenes).forEach((key) => {
-								if ((key = action.options.uuid)) {
-									scenes[key].activation = response.data.activation
+							Object.keys(contents).forEach((key) => {
+								if ((contents[key].uuid = action.options.uuid)) {
+									contents[key].activation = response.data.activation
 									smodeLive.checkSceneVariables(self)
 								}
 							})
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'SCENEACTIVEON', error)
+						smodeLive.actionsError(self, 'CONTENTACTIVEON', error)
 					})
 			},
 		},
 
 		sceneActivationOff: {
-			name: 'Scene Activation Off',
-			tooltip: 'Scene Activation Off',
+			name: 'Contents Activation Off',
+			tooltip: 'Contents Activation Off',
 			options: [
 				{
 					id: 'uuid',
@@ -375,11 +484,11 @@ export function getActionDefinitions(self) {
 				},
 			],
 			callback: async (action, context) => {
-				let scenes = self.smodeLiveData.scenes
+				let contents = self.smodeLiveData.scenes
 				// AXIOS
 				const patchOptions = new HttpPatchOptions(
 					self,
-					'SCENEACTIVEOFF',
+					'CONTENTACTIVEOFF',
 					`/api/live/objects/${action.options.uuid}?variablePath=activation`,
 					{ value: false }
 				)
@@ -387,24 +496,23 @@ export function getActionDefinitions(self) {
 					.request(patchOptions)
 					.then(async function (response) {
 						if (response.status === 200) {
-							Object.keys(scenes).forEach((key) => {
-								if ((key = action.options.uuid)) {
-									scenes[key].activation = response.data.activation
+							Object.keys(contents).forEach((key) => {
+								if ((contents[key].uuid = action.options.uuid)) {
+									contents[key].activation = response.data.activation
 									smodeLive.checkSceneVariables(self)
 								}
 							})
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'SCENEACTIVEOFF', error)
+						smodeLive.actionsError(self, 'CONTENTACTIVEOFF', error)
 					})
 			},
 		},
 
 		sceneLoadingToogle: {
-			name: 'Scene Loading Toggle',
-			tooltip: 'Scene Loading Toggle',
+			name: 'Contents Loading Toggle',
+			tooltip: 'Contents Loading Toggle',
 			options: [
 				{
 					id: 'uuid',
@@ -414,15 +522,15 @@ export function getActionDefinitions(self) {
 				},
 			],
 			callback: async (action, context) => {
-				let scenes = self.smodeLiveData.scenes
+				let contents = self.smodeLiveData.scenes
 				let val = false
 				if (self.getVariableValue(`scene_${action.options.uuid}_loading`) === 'inactive') val = true
 				// AXIOS
 				const patchOptions = new HttpPatchOptions(
 					self,
-					'SCENELOADINGTOOGLE',
+					'CONTENTLOADINGTOOGLE',
 					`/api/live/objects/${action.options.uuid}?variablePath=loading`,
-					{ value: val },
+					{ value: val }
 				)
 				axios
 					.request(patchOptions)
@@ -433,24 +541,23 @@ export function getActionDefinitions(self) {
 						console.log(response.headers)
 						console.log(response.config)
 						if (response.status === 200) {
-							Object.keys(scenes).forEach((key) => {
-								if ((key = action.options.uuid)) {
-									scenes[key].loading = response.data.loading
+							Object.keys(contents).forEach((key) => {
+								if ((contents[key].uuid = action.options.uuid)) {
+									contents[key].loading = response.data.loading
 									smodeLive.checkSceneVariables(self)
 								}
 							})
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'SCENELOADINGTOOGLE', error)
+						smodeLive.actionsError(self, 'CONTENTLOADINGTOOGLE', error)
 					})
 			},
 		},
 
 		sceneLoadingOn: {
-			name: 'Scene Loading On',
-			tooltip: 'Scene Loading On',
+			name: 'Contents Loading On',
+			tooltip: 'Contents Loading On',
 			options: [
 				{
 					id: 'uuid',
@@ -460,36 +567,35 @@ export function getActionDefinitions(self) {
 				},
 			],
 			callback: async (action, context) => {
-				let scenes = self.smodeLiveData.scenes
+				let contents = self.smodeLiveData.scenes
 				// AXIOS
 				const patchOptions = new HttpPatchOptions(
 					self,
-					'SCENELOADINGON',
+					'CONTENTLOADINGON',
 					`/api/live/objects/${action.options.uuid}?variablePath=loading`,
-					{ value: true },
+					{ value: true }
 				)
 				axios
 					.request(patchOptions)
 					.then(async function (response) {
 						if (response.status === 200) {
-							Object.keys(scenes).forEach((key) => {
-								if ((key = action.options.uuid)) {
-									scenes[key].loading = response.data.loading
+							Object.keys(contents).forEach((key) => {
+								if ((contents[key].uuid = action.options.uuid)) {
+									contents[key].loading = response.data.loading
 									smodeLive.checkSceneVariables(self)
 								}
 							})
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'SCENELOADINGON', error)
+						smodeLive.actionsError(self, 'CONTENTLOADINGON', error)
 					})
 			},
 		},
 
 		sceneLoadingOff: {
-			name: 'Scene Loading Off',
-			tooltip: 'Scene Loading Off',
+			name: 'Contents Loading Off',
+			tooltip: 'Contents Loading Off',
 			options: [
 				{
 					id: 'uuid',
@@ -499,29 +605,28 @@ export function getActionDefinitions(self) {
 				},
 			],
 			callback: async (action, context) => {
-				let scenes = self.smodeLiveData.scenes
+				let contents = self.smodeLiveData.scenes
 				// AXIOS
 				const patchOptions = new HttpPatchOptions(
 					self,
-					'SCENELOADINGOFF',
+					'CONTENTLOADINGOFF',
 					`/api/live/objects/${action.options.uuid}?variablePath=loading`,
-					{ value: false },
+					{ value: false }
 				)
 				axios
 					.request(patchOptions)
 					.then(async function (response) {
 						if (response.status === 200) {
-							Object.keys(scenes).forEach((key) => {
-								if ((key = action.options.uuid)) {
-									scenes[key].loading = response.data.loading
+							Object.keys(contents).forEach((key) => {
+								if ((contents[key].uuid = action.options.uuid)) {
+									contents[key].loading = response.data.loading
 									smodeLive.checkSceneVariables(self)
 								}
 							})
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'SCENELOADINGOFF', error)
+						smodeLive.actionsError(self, 'CONTENTLOADINGOFF', error)
 					})
 			},
 		},
@@ -545,25 +650,33 @@ export function getActionDefinitions(self) {
 			callback: async (action, context) => {
 				let val = false
 				if (self.getVariableValue(`device_${action.options.uuid}_isMuted`) === false) val = true
-
 				// AXIOS
 				const patchOptions = new HttpPatchOptions(
 					self,
 					'DEVICEMUTE',
 					`/api/live/devices/${action.options.uuid}?variablePath=mute`,
-					{ value: val },
+					{ value: val }
 				)
 
 				axios
 					.request(patchOptions)
 					.then(async function (response) {
-						if (response.status === 200 && response.data.state === 'success') {
-							smodeLive.getDevices(self)
+						console.log(response.data)
+						console.log(response.status)
+						console.log(response.statusText)
+						console.log(response.headers)
+						console.log(response.config)
+						if (response.status === 200) {
+							for (const device in self.smodeLiveData.devices){
+								if (self.smodeLiveData.devices[device].uuid == action.options.uuid) {
+									self.smodeLiveData.devices[device].isMuted = response.data
+								}
+							}
+							smodeLive.checkDevicesVariables(self)
 						}
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'SET ON AIR', error)
+						smodeLive.actionsError(self, 'SET ON AIR', error)
 					})
 			},
 		},
@@ -600,8 +713,7 @@ export function getActionDefinitions(self) {
 						await smodeLive.checkOnAir(self)
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'SET ON AIR', error)
+						smodeLive.actionsError(self, 'SET ON AIR', error)
 					})
 			},
 		},
@@ -629,8 +741,7 @@ export function getActionDefinitions(self) {
 						await smodeLive.checkEcoMode(self)
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'SET ECO MODE', error)
+						smodeLive.actionsError(self, 'SET ECO MODE', error)
 					})
 			},
 		},
@@ -658,8 +769,7 @@ export function getActionDefinitions(self) {
 						await smodeLive.checkOutput(self)
 					})
 					.catch(function (error) {
-						console.log(error)
-						this.httpError(self, 'SET OUTPUT', error)
+						smodeLive.actionsError(self, 'SET OUTPUT', error)
 					})
 			},
 		},

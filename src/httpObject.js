@@ -5,7 +5,7 @@ export class HttpPatchOptions {
 		this.baseURL = self.smodeLiveData.prefix
 		this.method = 'patch'
 		this.headers = {accept: "application/json, text/plain, */*",}
-		this.params = { ID: id }
+		this.params = {}
 		this.timeout = 30000
 		this.data = datas
 	}
@@ -17,7 +17,7 @@ export class HttpGetOptions {
 		this.url = self.smodeLiveData.prefix + url
 		this.method = 'get'
 		this.baseURL = self.smodeLiveData.prefix
-		this.params = { ID: id }
+		this.params = {}
 		this.timeout = 30000
 		this.headers = {accept: "application/json, text/plain, */*",}
 		this.filterClass = filterClass
@@ -32,7 +32,7 @@ export class HttpPostOptions {
 		this.baseURL = self.smodeLiveData.prefix
 		this.method = 'post'
 		this.headers = {accept: "application/json, text/plain, */*",}
-		this.params = { ID: id }
+		this.params = {}
 		this.timeout = 30000
 	}
 }

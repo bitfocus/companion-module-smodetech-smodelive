@@ -33,8 +33,6 @@ class SmodeLive extends InstanceBase {
 		this.config = config
 		this.smodeLiveData = {
 			prefix: "",
-			connectingConut: 0,
-			getversion: true,
 			onAir: false,
 			ecoMode: false,
 			output: false,
@@ -42,18 +40,10 @@ class SmodeLive extends InstanceBase {
 			staticstics: {},
 			version: {},
 			devices: {},
-			ismuted: [
-				{ id: 'mute', name: 'Mute' },
-				{ id: 'unmute', name: 'Unmute' },
-			],
-			objects: [],
+			contents: [],
 			scenes: {},
-			timelinesUUID: [],
 			timelines: {},
-			activation: [
-				{ id: 'active', name: 'Active' },
-				{ id: 'inactive', name: 'Inactive' },
-			],
+			parameters: {},
 		}
 
 		this.updateActions() // export actions
@@ -100,9 +90,8 @@ class SmodeLive extends InstanceBase {
 		await smodeLive.getOnAir(this)
 		await smodeLive.getEcoMode(this)
 		await smodeLive.getOutput(this)
-		if (this.config.autoScenes) await smodeLive.getObjects(this, "Scene")
+		if (this.config.autoContents) await smodeLive.getContents(this)
 		if (this.config.autoDevices) await smodeLive.getDevices(this)
-		if (this.config.autoTimeLines) await smodeLive.getTimelinesUUID(this)
 	}
 
 	//██████   ██████  ██      ██      ██ ███    ██  ██████  

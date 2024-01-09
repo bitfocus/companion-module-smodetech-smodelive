@@ -34,6 +34,31 @@ export function GetConfigFields(self) {
 			default: false,
 			width: 2
 		},
+        {
+            type: 'textinput',
+            id: 'certFilePath',
+            label: 'Certifact File Path',
+            width: 12,
+        },
+        {
+            type: 'textinput',
+            id: 'keyFilePath',
+            label: 'Key File Path',
+            width: 12,
+        },
+                {
+            type: 'static-text',
+            id: 'passwordInfo',
+            width: 12,
+            value: `You need to set a password only if the <b>Key file path is encrypted<b/>.`,
+        },
+        {
+            type: 'textinput',
+            id: 'password',
+            label: 'Password',
+            width: 12,
+            default: "Password",
+        },
         // {
         //     type: 'static-text',
         //     id: 'prefix',
@@ -97,22 +122,29 @@ export function GetConfigFields(self) {
         },
         {
 			type: 'checkbox',
-			id: 'autoScenes',
-			label: 'Auto Get Scenes',
+			id: 'autoContents',
+			label: 'Auto Contents',
 			default: false,
 			width: 2
 		},
-        {
-			type: 'checkbox',
-			id: 'autoTimeLines',
-			label: 'Auto Get TimeLines',
-			default: false,
-			width: 2
-		},
+        // {
+		// 	type: 'checkbox',
+		// 	id: 'autoScenes',
+		// 	label: 'Auto Get Scenes',
+		// 	default: false,
+		// 	width: 2
+		// },
+        // {
+		// 	type: 'checkbox',
+		// 	id: 'autoTimeLines',
+		// 	label: 'Auto Get TimeLines',
+		// 	default: false,
+		// 	width: 2
+		// },
         {
 			type: 'checkbox',
 			id: 'autoDevices',
-			label: 'Auto Get Devices',
+			label: 'Auto Devices',
 			default: false,
 			width: 2
 		},
