@@ -8,6 +8,8 @@ let sceneTMP = {}
 let tlTMP = {}
 let tlMakersTMP = {}
 let httpsAgent
+let banck = {}
+let lastCheckBankUUID = ""
 
 export const smodeLive = {
 	//██ ███    ██ ██ ████████     ███████ ███    ███  ██████  ██████  ███████     ██      ██ ██    ██ ███████
@@ -21,9 +23,14 @@ export const smodeLive = {
 		if (self.config.https) {
 			console.info(`SMODE LIVE | INIT HTTPS !`)
 			self.smodeLiveData.prefix = `https://${self.config.host}:${self.config.port}`
-			console.info(`SMODE LIVE | INIT HTTPS >>> ${self.config.certFilePath} | ${self.config.keyFilePath}`)
-			if (self.config.certFilePath !== "" && self.config.keyFilePath !== "" && self.config.certFilePath !== undefined && self.config.keyFilePath !== undefined) {
-				console.info(`SMODE LIVE | INIT HTTPS FILES | CERT FILE >>> ${fs.existsSync(self.config.certFilePath)}  | KEY FILE >>> ${fs.existsSync(self.config.keyFilePath)}`)
+			//console.info(`SMODE LIVE | INIT HTTPS >>> ${self.config.certFilePath} | ${self.config.keyFilePath}`)
+			if (
+				self.config.certFilePath !== '' &&
+				self.config.keyFilePath !== '' &&
+				self.config.certFilePath !== undefined &&
+				self.config.keyFilePath !== undefined
+			) {
+				//console.info(`SMODE LIVE | INIT HTTPS FILES | CERT FILE >>> ${fs.existsSync(self.config.certFilePath)}  | KEY FILE >>> ${fs.existsSync(self.config.keyFilePath)}`)
 				let certFile = fs.readFileSync(self.config.certFilePath)
 				let keyFile = fs.readFileSync(self.config.keyFilePath)
 				httpsAgent = new https.Agent({
@@ -34,11 +41,11 @@ export const smodeLive = {
 				})
 			} else {
 				console.info(`SMODE LIVE | INIT HTTPS ! BAD HTTPS`)
-				self.updateStatus(InstanceStatus.BadConfig, "Certifacte Default")
+				self.updateStatus(InstanceStatus.BadConfig, 'Certifacte Default')
 				return
 			}
 		} else {
-			console.info(`SMODE LIVE | INIT HTTP !`)
+			//console.info(`SMODE LIVE | INIT HTTP !`)
 			self.smodeLiveData.prefix = `http://${self.config.host}:${self.config.port}`
 		}
 
@@ -82,32 +89,87 @@ export const smodeLive = {
 	},
 
 	// PARAMETERS
-	// async getParameters(self) {
-	// 	let parametersTMP = {}
-	// 	let contents = self.smodeLiveData.contents
-	// 	for (const scene in contents) {
-	// 		//self.log('warn', `SMODELIVE | GET PARAMETERS SCENE UUID >>> ${contents[scene].actions}`)
-	// 		//if (contents[scene].uuid != '00000000-0000-0000-0000-000000000000') {
-	// 			let paras = {}
-	// 			for (const para in contents[scene].actions) {
-	// 				//self.log('warn', `SMODELIVE | GET PARAMETERS SCENE ACTIONS CLASS >>> ${contents[scene].actions[para].class}`)
-	// 				if (contents[scene].actions[para].class === "ParametersState"){
-	// 					self.log('warn', `SMODELIVE | GET PARAMETERS PARENT LABEL >>> ${paras[contents[scene].actions[para].parentUuid]}`)
-	// 					//self.log('warn', `SMODELIVE | GET PARAMETERS PARENT LABEL >>> ${contents[scene].actions[para].parentLabel}`)
-	// 					if (paras[contents[scene].actions[para].parentUuid] === undefined) paras[contents[scene].actions[para].parentUuid] = {}
-	// 					// paras[contents[scene].actions[para].parentUuid][contents[scene].actions[para].uuid] = contents[scene].actions[para]
-	// 					// paras[contents[scene].actions[para].parentUuid][contents[scene].actions[para].uuid]["label"] = contents[scene].actions[para].parentLabel
-	// 				}
-	// 			}
-	// 			if (Object.keys(paras).length !== 0){
-	// 			parametersTMP[contents[scene].uuid] = paras
-	// 			parametersTMP[contents[scene].uuid]['scene'] = contents[scene].label
-	// 			}
-	// 		//}
-	// 	}
-	// 	self.smodeLiveData.parameters = parametersTMP
-	// 	self.log('warn', `SMODELIVE | GET PARAMETERS >>> ${JSON.stringify(self.smodeLiveData.parameters, null, 4)}`)
-	// },
+	async getParameters(self) {
+		let parasTMP = []
+		let contents = self.smodeLiveData.contents
+		let bankstMP = {}
+		for (const scene in contents) {
+			let sceneObject = contents[scene]
+
+			let paramaters = []
+			let parentUuid = ''
+			let index = 0
+			for (const action in sceneObject.actions) {
+				//self.log('warn', `SMODELIVE | GET PARAMETERS PROPS INDEX >>> ${action}`)
+				let actionOBJ = sceneObject.actions[action]
+				if (actionOBJ.class === 'ParametersState') {
+					actionOBJ['sceneLabel'] = sceneObject.label
+					actionOBJ['sceneUuid'] = sceneObject.uuid
+					// CHECK PARENTUUID FROM INDEX
+					if (actionOBJ.parentUuid !== parentUuid) {
+						index = 0
+						parentUuid = actionOBJ.parentUuid
+					}
+					actionOBJ['index'] = index
+					parasTMP.push(actionOBJ)
+					index += 1
+					let bOJT = await this.getBankIndex(self, actionOBJ.parentUuid, actionOBJ.parentLabel)
+					bankstMP[bOJT.uuid] = bOJT
+				}
+			}
+			///parasTMP.push(paramaters)
+		}
+		//self.log('warn', `SMODELIVE | GET PARAMETERS PROPS >>> ${JSON.stringify(parasTMP, null, 4)}`)
+		self.smodeLiveData.banksIndex = bankstMP
+		self.smodeLiveData.parameters = parasTMP
+		//self.log('warn', `SMODELIVE | GET BANKS INDEX >>> ${JSON.stringify(self.smodeLiveData.banksIndex, null, 4)}`)
+		await self.initVariables()
+		await self.updateFeedbacks()
+		//await self.updateActions()
+		await self.updatePresets()
+		await this.checkParametersVariables(self)
+		await this.checkBanksVariables(self)
+	},
+
+	async getBankIndex(self, uuid, label) {
+		await this.httpSend(self, 'BANKINDEX', `/api/live/objects/${uuid}`)
+		//self.log('warn', `SMODELIVE | GET BANK INDEX >>> ${JSON.stringify(this.banck, null, 4)}`)
+		let bOBJ = {}
+		bOBJ['uuid'] = uuid
+		bOBJ['label'] = label
+		bOBJ['currentStateIndex'] = this.banck.currentStateIndex
+		return bOBJ
+	},
+
+	async checkBankIndex(self, uuid) {
+		lastCheckBankUUID = uuid
+		await this.httpSend(self, 'CHECKBANKINDEX', `/api/live/objects/${uuid}`)
+	},
+
+	async checkParametersVariables(self) {
+		let para = self.smodeLiveData.parameters
+		Object.keys(para).forEach((key) => {
+			let paraOBJ = para[key]
+			self.setVariableValues({
+				[`para_${paraOBJ.uuid}_uuid`]: paraOBJ.uuid,
+				[`para_${paraOBJ.uuid}_name`]: `${paraOBJ.sceneLabel}\n${paraOBJ.parentLabel}\n${paraOBJ.label}`,
+			})
+		})
+		await self.checkFeedbacks()
+	},
+
+	async checkBanksVariables(self) {
+		let banks = self.smodeLiveData.banksIndex
+		Object.keys(banks).forEach((key) => {
+			let bOBJ = banks[key]
+			self.setVariableValues({
+				[`bank_${bOBJ.uuid}_uuid`]: bOBJ.uuid,
+				[`bank_${bOBJ.uuid}_currentStateIndex`]: bOBJ.currentStateIndex,
+				[`bank_${bOBJ.uuid}_name`]: bOBJ.label,
+			})
+		})
+		await self.checkFeedbacks()
+	},
 
 	//████████ ██ ███    ███ ███████ ██      ██ ███    ██ ███████ ███████
 	//   ██    ██ ████  ████ ██      ██      ██ ████   ██ ██      ██
@@ -127,12 +189,16 @@ export const smodeLive = {
 					contents[scene].label
 				)
 				let markers = []
-				for (const marker in contents[scene].actions) {
-					if (contents[scene].actions[marker].class === "TimeMarker"){
-						markers.push(contents[scene].actions[marker])
+				let paramaters = []
+				for (const action in contents[scene].actions) {
+					if (contents[scene].actions[action].class === 'TimeMarker') {
+						markers.push(contents[scene].actions[action])
+					} else if (contents[scene].actions[action].class === 'ParametersState') {
+						paramaters.push(contents[scene].actions[action])
 					}
 				}
-				timelinesTMP[contents[scene].animationUuid].timeMarkers = markers //contents[scene].actions
+				timelinesTMP[contents[scene].animationUuid].timeMarkers = markers
+				timelinesTMP[contents[scene].animationUuid].paramaters = paramaters
 			}
 		}
 		//self.log('info', `SMODELIVE | GET TIMELINE PROPS >>> ${JSON.stringify(timelinesTMP, null, 4)}`)
@@ -145,7 +211,7 @@ export const smodeLive = {
 	},
 
 	async getTimeline(self, uuid, parent) {
-		self.log('info', `SMODELIVE | GET TIMELINE >>> ${uuid} ${parent}`)
+		//self.log('info', `SMODELIVE | GET TIMELINE >>> ${uuid} ${parent}`)
 		await this.httpSend(self, 'TIMELINE', `/api/live/objects/${uuid}`)
 		//self.log('info', `SMODELIVE | GET TIMELINE >>> ${JSON.stringify(tlTMP, null, 4)}`)
 		let jsonObject = tlTMP
@@ -172,8 +238,8 @@ export const smodeLive = {
 			let makersOBJ = tl[key].timeMarkers
 			for (let i = 0; i < makersOBJ.length; i++) {
 				self.setVariableValues({
-					[`tl_marker_${key}_${makersOBJ[i].uuid}_uuid`]: makersOBJ[i].uuid,
-					[`tl_marker_${key}_${makersOBJ[i].uuid}_name`]: makersOBJ[i].label,
+					[`tl_marker_${makersOBJ[i].uuid}_uuid`]: makersOBJ[i].uuid,
+					[`tl_marker_${makersOBJ[i].uuid}_name`]: makersOBJ[i].label,
 				})
 			}
 		})
@@ -372,9 +438,9 @@ export const smodeLive = {
 	},
 
 	// SEND & ERROR
-	async httpSend(self, id, url, filterClass = '') {
+	async httpSend(self, id, url) {
 		if (!this.getHttpValide(self)) return
-		let options = new HttpGetOptions(self, id, url, filterClass, httpsAgent)
+		let options = new HttpGetOptions(self, id, url, httpsAgent)
 		try {
 			let response = await axios.request(options)
 			await this.httpReponse(self, response)
@@ -396,11 +462,11 @@ export const smodeLive = {
 
 			// CONTENTS
 			if (response.config.id === 'CONTENTS') {
-				self.log('info', `SMODE LIVE | HTTP RESPONSE CONTENTS >>> ${JSON.stringify(response.data, null, 4)}`)
+				//self.log('info', `SMODE LIVE | HTTP RESPONSE CONTENTS >>> ${JSON.stringify(response.data, null, 4)}`)
 				self.smodeLiveData.contents = response.data
 				await this.getScenesInContents(self)
 				await this.getTimelinesList(self)
-				//await this.getParameters(self)
+				await this.getParameters(self)
 				return
 			}
 
@@ -420,6 +486,24 @@ export const smodeLive = {
 					self.updateStatus(InstanceStatus.Connecting)
 					return
 				}
+			}
+
+			// BANK INDEX
+			if (response.config.id === 'BANKINDEX') {
+				if (response.status === 200) {
+					this.banck = response.data
+				}
+				return
+			}
+
+			// CHECK BANK INDEX
+			if (response.config.id === 'CHECKBANKINDEX') {
+				if (response.status === 200) {
+					//console.log(response.data)
+					self.smodeLiveData.banksIndex[lastCheckBankUUID].currentStateIndex = response.data.currentStateIndex
+					this.checkBanksVariables(self)
+				}
+				return
 			}
 
 			// STASTITICS

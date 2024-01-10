@@ -43,7 +43,8 @@ class SmodeLive extends InstanceBase {
 			contents: [],
 			scenes: {},
 			timelines: {},
-			parameters: {},
+			parameters: [],
+			banksIndex: {},
 		}
 
 		this.updateActions() // export actions

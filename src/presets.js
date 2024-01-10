@@ -4,6 +4,56 @@ import { colors, icons } from './assets.js'
 export function getPresetsDefinitions(self) {
 	const presets = {}
 
+	// PARAMETERS
+	Object.keys(self.smodeLiveData.parameters).forEach((key) => {
+		let para = self.smodeLiveData.parameters[key]
+		self.log('info', `PRESETS | PARAMETERS >>> ${key} ${JSON.stringify(para,null, 4)}`)
+		let cat = para.sceneLabel
+		const rgb = [
+			Math.ceil(para.colorLabel.red * 255),
+			Math.ceil(para.colorLabel.green * 255),
+			Math.ceil(para.colorLabel.blue * 255),
+		]
+
+		presets[para.uuid] = {
+			type: 'button',
+			category: cat,
+			style: {
+				text: '$(Smode_Live:para_' + para.uuid + '_name)',
+				size: '12',
+				color: combineRgb(255, 255, 255),
+				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+				// alignment: 'center:top',
+				// png64: icons.ICON_PLAY,
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'parameterStateIndex',
+							options: {
+								parUuid: para.uuid,
+								bankUuid: para.parentUuid,
+							},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [
+				// {
+				// 	feedbackId: fbTS,
+				// 	options: {
+				// 		activation: tlOBJ.transport.state,
+				// 	},
+				// 	style: {
+				// 		png64: icons.ICON_PAUSE,
+				// 	},
+				// },
+			],
+		}
+	})
+
 	//████████ ██ ███    ███ ███████ ██      ██ ███    ██ ███████ ███████
 	//   ██    ██ ████  ████ ██      ██      ██ ████   ██ ██      ██
 	//   ██    ██ ██ ████ ██ █████   ██      ██ ██ ██  ██ █████   ███████
@@ -223,7 +273,7 @@ export function getPresetsDefinitions(self) {
 				type: 'button',
 				category: cat,
 				style: {
-					text: '$(Smode_Live:tl_marker_' + key + '_' + tmOBJ.uuid + '_name)',
+					text: '$(Smode_Live:tl_marker_' + tmOBJ.uuid + '_name)',
 					size: '14',
 					color: colors.colorWhite,
 					bgcolor: combineRgb(rgbMaker[0], rgbMaker[1], rgbMaker[2]),

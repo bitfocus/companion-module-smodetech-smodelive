@@ -12,7 +12,7 @@ export class HttpPatchOptions {
 }
 
 export class HttpGetOptions {
-	constructor(self, id, url, filterClass, agent) {
+	constructor(self, id, url, agent) {
 		this.id = id
 		this.url = self.smodeLiveData.prefix + url
 		this.method = 'get'
@@ -20,7 +20,6 @@ export class HttpGetOptions {
 		this.params = {}
 		this.timeout = 30000
 		this.headers = {accept: "application/json, text/plain, */*",}
-		this.filterClass = filterClass
 		this.httpsAgent = agent
 	}
 }

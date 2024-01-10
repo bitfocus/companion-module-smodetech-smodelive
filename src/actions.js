@@ -19,6 +19,50 @@ export function getActionDefinitions(self) {
 			},
 		},
 
+		// PARAMETERS STATE INDEX
+		parameterStateIndex: {
+			name: 'Parameters state index',
+			tooltip: 'Parameters state index',
+			options: [
+				{
+					id: 'parUuid',
+					type: 'textinput',
+					label: 'Paramaters UUID',
+					default: '0',
+				},
+				{
+					id: 'bankUuid',
+					type: 'textinput',
+					label: 'Bank UUID',
+					default: '0',
+				},
+			],
+						callback: async (action, context) => {
+				// AXIOS
+				const postOptions = new HttpPostOptions(
+					self,
+					'BANKINDEX',
+					`/api/live/animations/${action.options.parUuid}/trigger?state=apply`
+				)
+				axios
+					.request(postOptions)
+					.then(async function (response) {
+						// console.log(response.data)
+						// console.log(response.status)
+						// console.log(response.statusText)
+						// console.log(response.headers)
+						// console.log(response.config)
+						if (response.status === 200) {
+							await smodeLive.checkBankIndex(self, action.options.bankUuid)
+						}
+					})
+					.catch(function (error) {
+						
+						smodeLive.actionsError(self, 'BANKINDEX', error)
+					})
+			},
+		},
+
 		//████████ ██ ███    ███ ███████ ██      ██ ███    ██ ███████ ███████
 		//   ██    ██ ████  ████ ██      ██      ██ ████   ██ ██      ██
 		//   ██    ██ ██ ████ ██ █████   ██      ██ ██ ██  ██ █████   ███████
@@ -55,11 +99,11 @@ export function getActionDefinitions(self) {
 				axios
 					.request(postOptions)
 					.then(async function (response) {
-						console.log(response.data)
-						console.log(response.status)
-						console.log(response.statusText)
-						console.log(response.headers)
-						console.log(response.config)
+						// console.log(response.data)
+						// console.log(response.status)
+						// console.log(response.statusText)
+						// console.log(response.headers)
+						// console.log(response.config)
 						if (response.status === 200) {
 						}
 					})
@@ -93,11 +137,11 @@ export function getActionDefinitions(self) {
 				axios
 					.request(postOptions)
 					.then(async function (response) {
-						console.log(response.data)
-						console.log(response.status)
-						console.log(response.statusText)
-						console.log(response.headers)
-						console.log(response.config)
+						// console.log(response.data)
+						// console.log(response.status)
+						// console.log(response.statusText)
+						// console.log(response.headers)
+						// console.log(response.config)
 						if (response.status === 200) {
 							let tl = self.smodeLiveData.timelines
 							tl[action.options.uuid].transport.playing = response.data.transport.playing

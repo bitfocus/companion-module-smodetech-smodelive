@@ -138,14 +138,49 @@ export function getVariables() {
 			for (let i = 0; i < makersOBJ.length; i++) {
 				//this.log('warn', `VARIABLES | TIMELINES >>> ${tl[key].label}`)
 				variables.push({
-					variableId: `tl_marker_${key}_${makersOBJ[i].uuid}_uuid`,
+					variableId: `tl_marker_${makersOBJ[i].uuid}_uuid`,
 					name: `${tl[key].parent} ${tl[key].label} ${makersOBJ[i].label} UUID`,
 				})
 				variables.push({
-					variableId: `tl_marker_${key}_${makersOBJ[i].uuid}_name`,
+					variableId: `tl_marker_${makersOBJ[i].uuid}_name`,
 					name: `${tl[key].parent} ${tl[key].label} ${makersOBJ[i].label} name`,
 				})
 			}
+		})
+	}
+
+	// PARAMETERS BANKS
+	if (this.smodeLiveData.parameters.length !== 0) {
+		let para = this.smodeLiveData.parameters
+		for (let i = 0; i < para.length; i++) {
+			//this.log('warn', `VARIABLES | TIMELINES >>> ${tl[key].label}`)
+			variables.push({
+				variableId: `para_${para[i].uuid}_uuid`,
+				name: `${para[i].sceneLabel} ${para[i].parentLabel} ${para[i].label} UUID`,
+			})
+			variables.push({
+				variableId: `para_${para[i].uuid}_name`,
+				name: `${para[i].sceneLabel} ${para[i].parentLabel} ${para[i].label} name`,
+			})
+		}
+	}
+
+	// BANKS INDEX
+	if (Object.keys(this.smodeLiveData.banksIndex).length !== 0) {
+		let b = this.smodeLiveData.banksIndex
+		Object.keys(b).forEach((key) => {
+			variables.push({
+				variableId: `bank_${b[key].uuid}_uuid`,
+				name: `${b[key].label} uuid`,
+			})
+			variables.push({
+				variableId: `bank_${b[key].uuid}_currentStateIndex`,
+				name: `${b[key].label} currentStateIndex`,
+			})
+			variables.push({
+				variableId: `bank_${b[key].uuid}_name`,
+				name: `${b[key].label} name`,
+			})
 		})
 	}
 
