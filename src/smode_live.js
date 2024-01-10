@@ -190,18 +190,15 @@ export const smodeLive = {
 
 	async getScenesInContents(self) {
 		if (!this.getHttpValide(self)) return
-		//self.log('info', `SMODELIVE | GET SCENES IN CONTENTS | START !`)
 		let scenesTMP = {}
 		let contents = self.smodeLiveData.contents
 		for (const scene in contents) {
-			if (contents[scene].label === 'Show') {
-				//self.smodeLiveData.show[contents[scene].uuid] = contents[scene]
-			} else {
-				let uuid = contents[scene].uuid
-				await this.httpSend(self, 'SCENE', `/api/live/objects/${uuid}`)
-				scenesTMP[uuid] = sceneTMP
-				scenesTMP[uuid].label = contents[scene].label
-			}
+			if (contents[scene].uuid === '00000000-0000-0000-0000-000000000000') // Handle the case where the show uuid is null
+				continue
+			let uuid = contents[scene].uuid
+			await this.httpSend(self, 'SCENE', `/api/live/objects/${uuid}`)
+			scenesTMP[uuid] = sceneTMP
+			scenesTMP[uuid].label = contents[scene].label
 		}
 		self.smodeLiveData.scenes = scenesTMP
 		await self.initVariables()
