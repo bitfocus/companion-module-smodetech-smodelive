@@ -3,6 +3,33 @@ import { combineRgb } from '@companion-module/base'
 export function getFeedbackDefinitions(self) {
 	const feedbacks = {}
 
+	// PARAMATERS
+	Object.keys(self.smodeLiveData.parameters).forEach((key) => {
+
+		let pOBJ = self.smodeLiveData.parameters[key]
+		console.log(`FEEDBACK | PARAMETERS >>> ${JSON.stringify(pOBJ, null, 4)}`)
+		const rgb = [
+			Math.ceil(pOBJ.colorLabel.red * 255),
+			Math.ceil(pOBJ.colorLabel.green * 255),
+			Math.ceil(pOBJ.colorLabel.blue * 255),
+		]
+		feedbacks[`${pOBJ.uuid}_index`] = {
+			name: `${pOBJ.label}`,
+			type: 'boolean',
+			label: `${pOBJ.label}`,
+			defaultStyle: {
+				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
+				color: combineRgb(0, 0, 0),
+			},
+			options: [],
+			callback: function (feedback) {
+				if (self.getVariableValue(`bank_${pOBJ.parentUuid}_currentStateIndex`) === pOBJ.index) {
+					return true
+				}
+			},
+		}
+	})
+
 	//████████ ██ ███    ███ ███████ ██      ██ ███    ██ ███████ ███████
 	//   ██    ██ ████  ████ ██      ██      ██ ████   ██ ██      ██
 	//   ██    ██ ██ ████ ██ █████   ██      ██ ██ ██  ██ █████   ███████

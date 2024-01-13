@@ -21,10 +21,10 @@ export function getPresetsDefinitions(self) {
 			style: {
 				text: '$(Smode_Live:para_' + para.uuid + '_name)',
 				size: '12',
+				alignment: 'center:top',
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
-				// alignment: 'center:top',
-				// png64: icons.ICON_PLAY,
+				png64: icons.ICON_OCULUS_CLOSE,
 			},
 			steps: [
 				{
@@ -41,15 +41,15 @@ export function getPresetsDefinitions(self) {
 				},
 			],
 			feedbacks: [
-				// {
-				// 	feedbackId: fbTS,
-				// 	options: {
-				// 		activation: tlOBJ.transport.state,
-				// 	},
-				// 	style: {
-				// 		png64: icons.ICON_PAUSE,
-				// 	},
-				// },
+				{
+					feedbackId: `${para.uuid}_index`,
+					options: {
+						activation: para.index,
+					},
+					style: {
+						png64: icons.ICON_CHECK,
+					},
+				},
 			],
 		}
 	})
