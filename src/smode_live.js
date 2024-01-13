@@ -19,9 +19,9 @@ export const smodeLive = {
 	//██ ██   ████ ██    ██        ███████ ██      ██  ██████  ██████  ███████     ███████ ██   ████   ███████
 	//
 	async init_smode_live(self) {
-		self.log('info', `AXIOS IS CANCEL >>> ${axios.isCancel('something')}`)
+		//self.log('info', `AXIOS IS CANCEL >>> ${axios.isCancel('something')}`)
 		if (self.config.https) {
-			console.info(`SMODE LIVE | INIT HTTPS !`)
+			//console.info(`SMODE LIVE | INIT HTTPS !`)
 			self.smodeLiveData.prefix = `https://${self.config.host}:${self.config.port}`
 			//console.info(`SMODE LIVE | INIT HTTPS >>> ${self.config.certFilePath} | ${self.config.keyFilePath}`)
 			if (
@@ -442,13 +442,16 @@ export const smodeLive = {
 			let response = await axios.request(options)
 			await this.httpReponse(self, response)
 		} catch (error) {
-			self.log('error', `HTTP GET Request failed (${id} | ${error.message} | ${error.code})`)
+			self.log('error', `SMODE LIVE | REQUEST FAILED (${id} | ${error.message} | ${error.code})`)
 			if (error.code === 'ECONNABORTED') {
 				self.updateStatus(InstanceStatus.ConnectionFailure, 'Check Smode Live Server!')
 			} else if (error.code === 'UNABLE_TO_VERIFY_LEAF_SIGNATURE') {
 				self.updateStatus(InstanceStatus.ConnectionFailure, error.message)
+			} else if (error.code === 'ECONNRESET') {
+				self.updateStatus(InstanceStatus.ConnectionFailure, error.message)
 			}
-			console.error(error.message)
+			//console.error(error.message)
+			self.stop_smodeLive_polling()
 		}
 	},
 
@@ -591,7 +594,7 @@ export const smodeLive = {
 				return
 			}
 		} else {
-			self.updateStatus(InstanceStatus.ConnectionFailure)
+			self.updateStatus(InstanceStatus.Connecting)
 			self.stop_smodeLive_polling()
 			return
 		}
@@ -599,12 +602,15 @@ export const smodeLive = {
 
 	// ACTIONS ERROR
 	async actionsError(self, id, error) {
-		self.log('error', `ACTION ERROR | REQUEST FAILED >>> ${id} | ${error.message} | ${error.code}`)
+		self.log('error', `SMODE LIVE | ACTION ERROR | REQUEST FAILED >>> ${id} | ${error.message} | ${error.code}`)
 		if (error.code === 'ECONNABORTED') {
 			self.updateStatus(InstanceStatus.ConnectionFailure, 'Check Smode Live Server!')
 		} else if (error.code === 'UNABLE_TO_VERIFY_LEAF_SIGNATURE') {
 			self.updateStatus(InstanceStatus.ConnectionFailure, error.message)
+		} else if (error.code === 'ECONNRESET') {
+			self.updateStatus(InstanceStatus.ConnectionFailure, error.message)
 		}
+		self.stop_smodeLive_polling()
 		//console.error(error.message)
 	},
 

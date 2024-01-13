@@ -7,7 +7,7 @@ export function getPresetsDefinitions(self) {
 	// PARAMETERS
 	Object.keys(self.smodeLiveData.parameters).forEach((key) => {
 		let para = self.smodeLiveData.parameters[key]
-		self.log('info', `PRESETS | PARAMETERS >>> ${key} ${JSON.stringify(para,null, 4)}`)
+		//self.log('info', `PRESETS | PARAMETERS >>> ${key} ${JSON.stringify(para,null, 4)}`)
 		let cat = para.sceneLabel
 		const rgb = [
 			Math.ceil(para.colorLabel.red * 255),

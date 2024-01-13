@@ -57,7 +57,6 @@ export function getActionDefinitions(self) {
 						}
 					})
 					.catch(function (error) {
-						
 						smodeLive.actionsError(self, 'BANKINDEX', error)
 					})
 			},
@@ -383,17 +382,14 @@ export function getActionDefinitions(self) {
 					`/api/live/objects/${action.options.uuid}?variablePath=parameters.looping`,
 					{ value: val }
 				)
-
-				self.log('info', `ACTIONS | TL LOOPING >>> ${patchOptions.url}\n${JSON.stringify(patchOptions.data, null, 4)} `)
-
 				axios
 					.request(patchOptions)
 					.then(async function (response) {
-						console.log(response.data)
-						console.log(response.status)
-						console.log(response.statusText)
-						console.log(response.headers)
-						console.log(response.config)
+						// console.log(response.data)
+						// console.log(response.status)
+						// console.log(response.statusText)
+						// console.log(response.headers)
+						// console.log(response.config)
 						if (response.status === 200) {
 							let tl = self.smodeLiveData.timelines
 							tl[action.options.uuid].parameters.looping = response.data.parameters.looping
@@ -438,31 +434,20 @@ export function getActionDefinitions(self) {
 				let contents = self.smodeLiveData.scenes
 				let val = false
 				if (self.getVariableValue(`scene_${action.options.uuid}_activation`) === 'inactive') val = true
-				self.log(
-					'info',
-					`ACTIONS | SCENE ACTIVATION TOGGLE >>> ${self.getVariableValue(`scene_${action.options.uuid}_activation`)}`
-				)
-				// AXIOS
 				const patchOptions = new HttpPatchOptions(
 					self,
 					'SCENEACTIVETOOGLE',
 					`/api/live/objects/${action.options.uuid}?variablePath=activation`,
 					{ value: val }
 				)
-
-				self.log(
-					'info',
-					`ACTIONS | CONTENTS ACTIVATION TOGGLE >>> ${patchOptions.url}\n${JSON.stringify(patchOptions.data, null, 4)} `
-				)
-
 				axios
 					.request(patchOptions)
 					.then(async function (response) {
-						console.log(response.data)
-						console.log(response.status)
-						console.log(response.statusText)
-						console.log(response.headers)
-						console.log(response.config)
+						// console.log(response.data)
+						// console.log(response.status)
+						// console.log(response.statusText)
+						// console.log(response.headers)
+						// console.log(response.config)
 						if (response.status === 200) {
 							Object.keys(contents).forEach((key) => {
 								if ((key = action.options.uuid)) {
@@ -579,11 +564,11 @@ export function getActionDefinitions(self) {
 				axios
 					.request(patchOptions)
 					.then(async function (response) {
-						console.log(response.data)
-						console.log(response.status)
-						console.log(response.statusText)
-						console.log(response.headers)
-						console.log(response.config)
+						// console.log(response.data)
+						// console.log(response.status)
+						// console.log(response.statusText)
+						// console.log(response.headers)
+						// console.log(response.config)
 						if (response.status === 200) {
 							Object.keys(contents).forEach((key) => {
 								if ((contents[key].uuid = action.options.uuid)) {
@@ -705,11 +690,11 @@ export function getActionDefinitions(self) {
 				axios
 					.request(patchOptions)
 					.then(async function (response) {
-						console.log(response.data)
-						console.log(response.status)
-						console.log(response.statusText)
-						console.log(response.headers)
-						console.log(response.config)
+						// console.log(response.data)
+						// console.log(response.status)
+						// console.log(response.statusText)
+						// console.log(response.headers)
+						// console.log(response.config)
 						if (response.status === 200) {
 							for (const device in self.smodeLiveData.devices){
 								if (self.smodeLiveData.devices[device].uuid == action.options.uuid) {

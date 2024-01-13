@@ -46,7 +46,6 @@ export function getVariables() {
 	//
 	if (this.smodeLiveData.devices != {}) {
 		for (let d in this.smodeLiveData.devices) {
-			//this.log('debug', `GET VARIABLEs ${this.smodeLiveData.devices[d].uuid} ${this.smodeLiveData.devices[d].label} ${this.smodeLiveData.devices[d].isMuted } `)
 			variables.push({
 				variableId: `device_${this.smodeLiveData.devices[d].uuid}_isMuted`,
 				name: `${this.smodeLiveData.devices[d].label} isMuted`,
@@ -67,7 +66,6 @@ export function getVariables() {
 	if (this.smodeLiveData.scenes != {}) {
 		let scenes = this.smodeLiveData.scenes
 		Object.keys(scenes).forEach((key) => {
-			//this.log('info', `VARIABLES | SCENE >>> ${key}`)
 			variables.push({
 				variableId: `scene_${key}_uuid`,
 				name: `${scenes[key].label} uuid`,
@@ -100,7 +98,6 @@ export function getVariables() {
 	if (this.smodeLiveData.timelines != {}) {
 		let tl = this.smodeLiveData.timelines
 		Object.keys(tl).forEach((key) => {
-			//this.log('warn', `VARIABLES | TIMELINES >>> ${tl[key].label}`)
 			variables.push({
 				variableId: `tl_${key}_uuid`,
 				name: `${tl[key].parent} ${tl[key].label} uuid`,
@@ -136,7 +133,6 @@ export function getVariables() {
 			// MAKERS VARIABLE
 			let makersOBJ = tl[key].timeMarkers
 			for (let i = 0; i < makersOBJ.length; i++) {
-				//this.log('warn', `VARIABLES | TIMELINES >>> ${tl[key].label}`)
 				variables.push({
 					variableId: `tl_marker_${makersOBJ[i].uuid}_uuid`,
 					name: `${tl[key].parent} ${tl[key].label} ${makersOBJ[i].label} UUID`,
@@ -153,7 +149,6 @@ export function getVariables() {
 	if (this.smodeLiveData.parameters.length !== 0) {
 		let para = this.smodeLiveData.parameters
 		for (let i = 0; i < para.length; i++) {
-			//this.log('warn', `VARIABLES | TIMELINES >>> ${tl[key].label}`)
 			variables.push({
 				variableId: `para_${para[i].uuid}_uuid`,
 				name: `${para[i].sceneLabel} ${para[i].parentLabel} ${para[i].label} UUID`,

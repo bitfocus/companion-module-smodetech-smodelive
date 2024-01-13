@@ -6,7 +6,7 @@ export class HttpPatchOptions {
 		this.method = 'patch'
 		this.headers = {accept: "application/json, text/plain, */*",}
 		this.params = {}
-		this.timeout = 30000
+		this.timeout = 5000
 		this.data = datas
 	}
 }
@@ -18,7 +18,7 @@ export class HttpGetOptions {
 		this.method = 'get'
 		this.baseURL = self.smodeLiveData.prefix
 		this.params = {}
-		this.timeout = 30000
+		this.timeout = 5000
 		this.headers = {accept: "application/json, text/plain, */*",}
 		this.httpsAgent = agent
 	}
@@ -32,6 +32,6 @@ export class HttpPostOptions {
 		this.method = 'post'
 		this.headers = {accept: "application/json, text/plain, */*",}
 		this.params = {}
-		this.timeout = 30000
+		this.timeout = 5000
 	}
 }

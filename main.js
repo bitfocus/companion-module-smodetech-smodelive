@@ -19,7 +19,7 @@ class SmodeLive extends InstanceBase {
 
 	// When module gets deleted
 	async destroy() {
-		stop_smodeLive_polling()
+		this.stop_smodeLive_polling()
 		this.log('debug', 'destroy')
 	}
 
@@ -46,12 +46,10 @@ class SmodeLive extends InstanceBase {
 			parameters: [],
 			banksIndex: {},
 		}
-
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
 		this.initVariables() // export variable definitions
 		this.updatePresets()
-
 		smodeLive.init_smode_live(this)
 	}
 
@@ -62,7 +60,6 @@ class SmodeLive extends InstanceBase {
 
 	async updateActions() {
 		getActionDefinitions(this)
-		//UpdateActions(this)
 	}
 
 	async updateFeedbacks() {
@@ -103,35 +100,19 @@ class SmodeLive extends InstanceBase {
 	//
 	init_smodeLive_polling() {
 		let self = this;
-
 		if (self.pollTimer) {
 			clearInterval(self.pollTimer);
 		}
-		self.log(`MAIN | POLLING ${self.pollTimer} ${self.config.pollingInterval}`)
 		if (self.pollTimer === undefined && self.config.pollingInterval > 0) {
 			self.pollTimer = setInterval(() => {
 				this.updateSmode()
 			}, Math.ceil(this.config.pollingInterval))
 		}
-
-		// if (this.config) {
-		// 	// STATUS POLLING
-			
-		// 	this.log('debug', `MAIN | GET COMPANION STATUS !`)
-		// 	if (this.config.pollingInterval === 0) {
-		// 		if (this.polling_interval) clearInterval(this.polling_interval)
-		// 	} else {
-		// 		this.polling_interval = setInterval(() => {
-		// 			this.updateSmode()
-		// 		}, Math.ceil(this.config.pollingInterval))
-		// 	}
-		// }
 	}
 
 	stop_smodeLive_polling() {
 		clearInterval(this.pollTimer);
 		delete this.pollTimer
-
 		if (this.retry_interval) clearInterval(this.retry_interval)
 		if (this.polling_interval) clearInterval(this.polling_interval)
 	}

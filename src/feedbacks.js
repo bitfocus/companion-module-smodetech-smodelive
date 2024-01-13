@@ -12,18 +12,13 @@ export function getFeedbackDefinitions(self) {
 
 	Object.keys(self.smodeLiveData.timelines).forEach((key) => {
 		let tlOBJ = self.smodeLiveData.timelines[key]
-		//self.log('info', `FEEDBACK | TIMELINES >>> ${key}_${tlOBJ.label}`)
 		const fbTS = `${key}_playing`
 		const fbLoop = `${key}_loop`
-		// const fbAC = `${key}_activation`
-		// const fbLD = `${key}_loading`
-
 		const rgb = [
 			Math.ceil(tlOBJ.colorLabel.red * 255),
 			Math.ceil(tlOBJ.colorLabel.green * 255),
 			Math.ceil(tlOBJ.colorLabel.blue * 255),
 		]
-
 		feedbacks[fbTS] = {
 			name: `${tlOBJ.label} Playing`,
 			type: 'boolean',
@@ -39,7 +34,6 @@ export function getFeedbackDefinitions(self) {
 				}
 			},
 		}
-
 		feedbacks[fbLoop] = {
 			name: `${tlOBJ.label} Looping`,
 			type: 'boolean',
@@ -67,8 +61,6 @@ export function getFeedbackDefinitions(self) {
 		let sceneOBJ = self.smodeLiveData.scenes[key]
 		const fbAC = `${key}_activation`
 		const fbLD = `${key}_loading`
-		//self.log('info', `FEEDBACK | SCENES DATA >>> ${key}_${sceneOBJ.label}_activation`)
-
 		const rgb = [
 			Math.ceil(sceneOBJ.colorLabel.red * 255),
 			Math.ceil(sceneOBJ.colorLabel.green * 255),
@@ -85,7 +77,6 @@ export function getFeedbackDefinitions(self) {
 			},
 			options: [],
 			callback: function (feedback) {
-				//console.log(`FEEDBACK | SCENES ACTION`)
 				if (self.getVariableValue(`scene_${key}_activation`) === 'inactive') {
 					return true
 				}
@@ -102,7 +93,6 @@ export function getFeedbackDefinitions(self) {
 			},
 			options: [],
 			callback: function (feedback) {
-				//console.log(`FEEDBACK | SCENES LOADING`)
 				if (self.getVariableValue(`scene_${key}_loading`) === 'inactive') {
 					return true
 				}
@@ -119,8 +109,6 @@ export function getFeedbackDefinitions(self) {
 	Object.keys(self.smodeLiveData.devices).forEach((key) => {
 		let deviceOBJ = self.smodeLiveData.devices[key]
 		const fbMT = `${deviceOBJ.uuid}_isMuted`
-		//self.log('info', `FEEDBACK | DEVICES DATA >>> ${deviceOBJ.uuid}_${deviceOBJ.label}`)
-
 		feedbacks[fbMT] = {
 			name: `${deviceOBJ.label} isMuted`,
 			type: 'boolean',
@@ -227,7 +215,6 @@ export function getFeedbackDefinitions(self) {
 			},
 		],
 		callback: function (feedback) {
-			//console.log('FEEDBACK | RUNNING STATUS >>>', feedback.options.smodeState)
 			let stateNumber = -1
 			if (self.smodeLiveData.status.state == 'running') {
 				stateNumber = 0
