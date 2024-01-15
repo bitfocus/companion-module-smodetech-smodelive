@@ -21,8 +21,8 @@ export function getActionDefinitions(self) {
 
 		// PARAMETERS STATE INDEX
 		parameterStateIndex: {
-			name: 'Parameters state index',
-			tooltip: 'Parameters state index',
+			name: 'Parameters state',
+			tooltip: 'Parameters state',
 			options: [
 				{
 					id: 'parUuid',

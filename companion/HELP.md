@@ -22,6 +22,9 @@ Version control 0.1.0
 * Get Version
 * Get Statistics
 
+##### Banks Parameters
+* Parameter State
+
 ##### Scenes Actions
 * Scene Activation Toggle
 * Scene Activation On
@@ -56,6 +59,9 @@ Version control 0.1.0
 ##### General Presets
 * Get Contents
 * Get Devices
+
+##### Banks Parameters
+* Parameter State
 
 ##### Scenes Preset
 * Scene Activation Toggle
