@@ -2,12 +2,11 @@ import { InstanceStatus } from '@companion-module/base'
 import fs from 'fs'
 import https from 'https'
 import axios from 'axios'
-import { HttpGetOptions } from './httpObject.js'
+import { HttpGetOptions, sethttpsAgent } from './httpObject.js'
 
 let sceneTMP = {}
 let tlTMP = {}
 let tlMakersTMP = {}
-let httpsAgent
 let banck = {}
 let lastCheckBankUUID = ""
 
@@ -28,17 +27,21 @@ export const smodeLive = {
 				self.config.certFilePath !== '' &&
 				self.config.keyFilePath !== '' &&
 				self.config.certFilePath !== undefined &&
-				self.config.keyFilePath !== undefined
+				self.config.keyFilePath !== undefined &&
+				self.config.certAuthorityFilePath !== '' && 
+				self.config.certAuthorityFilePath !== undefined
 			) {
-				//console.info(`SMODE LIVE | INIT HTTPS FILES | CERT FILE >>> ${fs.existsSync(self.config.certFilePath)}  | KEY FILE >>> ${fs.existsSync(self.config.keyFilePath)}`)
 				let certFile = fs.readFileSync(self.config.certFilePath)
 				let keyFile = fs.readFileSync(self.config.keyFilePath)
-				httpsAgent = new https.Agent({
-					rejectUnauthorized: false,
+				let certAuthorityFile = fs.readFileSync(self.config.certAuthorityFilePath)
+				sethttpsAgent(new https.Agent({
+					rejectUnauthorized: self.config.rejectUnauthorized,
 					cert: certFile,
 					key: keyFile,
-					passphrase: 'Password',
-				})
+					ca: certAuthorityFile,
+					keepAlive: false,
+					passphrase: self.config.password
+				}))
 			} else {
 				console.info(`SMODE LIVE | INIT HTTPS ! BAD HTTPS`)
 				self.updateStatus(InstanceStatus.BadConfig, 'Certifacte Default')
@@ -437,7 +440,7 @@ export const smodeLive = {
 	// SEND & ERROR
 	async httpSend(self, id, url) {
 		if (!this.getHttpValide(self)) return
-		let options = new HttpGetOptions(self, id, url, httpsAgent)
+		let options = new HttpGetOptions(self, id, url)
 		try {
 			let response = await axios.request(options)
 			await this.httpReponse(self, response)

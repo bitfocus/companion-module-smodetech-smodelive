@@ -14,14 +14,14 @@ export function GetConfigFields(self) {
 			type: 'textinput',
 			id: 'host',
 			label: 'IP Address',
-			width: 4,
+			width: 2,
 			regex: Regex.IP
 		},
         {
             type: 'textinput',
             id: 'port',
             label: 'Control Port',
-            width: 4,
+            width: 2,
             regex: Regex.PORT,
             min: 1,
             max: 65535,
@@ -35,6 +35,19 @@ export function GetConfigFields(self) {
 			width: 2
 		},
         {
+			type: 'checkbox',
+			id: 'rejectUnauthorized',
+			label: 'Reject Unauthorized',
+			default: true,
+			width: 3
+		},
+        {
+            type: 'static-text',
+            id: 'certInfo',
+            width: 12,
+            value: `You need to set a certificate only if the <b> HttpServer <b/> in Smode is set to Https with certificate authority.`,
+        },
+        {
             type: 'textinput',
             id: 'certFilePath',
             label: 'Certifact File Path',
@@ -46,7 +59,13 @@ export function GetConfigFields(self) {
             label: 'Key File Path',
             width: 12,
         },
-                {
+        {
+            type: 'textinput',
+            id: 'certAuthorityFilePath',
+            label: 'Certificate authority File Path',
+            width: 12,
+        },
+        {
             type: 'static-text',
             id: 'passwordInfo',
             width: 12,
