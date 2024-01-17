@@ -18,7 +18,7 @@ export function GetConfigFields(self) {
                     <li>Configure the address, port, and the Http Mode according to your preferences.</li>
                     <li>Return to <strong>companion</strong>, navigate to the buttons tab, and access Smode presets.</li>
                     <li>You'll find a list of buttons, each representing various interaction possibilities.</li>
-                    <li>Add these buttons to your **Stream Deck**.</li>
+                    <li>Add these buttons to your <strong>Stream Deck</strong>.</li>
                 </ul>
             `
         },
