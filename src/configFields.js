@@ -7,15 +7,28 @@ export function GetConfigFields(self) {
             id: 'info',
             width: 12,
             label: 'Information',
-            value:
-                "<strong>PLEASE READ THIS!</strong> Generic modules is only for use with custom applications. If you use this module to control a device or software on the market that more than you are using, <strong>PLEASE let us know</strong> about this software, so we can make a proper module for it. If we already support this and you use this to trigger a feature our module doesnt support, please let us know. We want companion to be as easy as possible to use for anyone.<br /><br />Use the 'Base URL' field below to define a starting URL for the instance's commands: e.g. 'http://server.url/path/'.  <b>This field will be ignored if a command uses a full URL.</b>",
+            value: `
+                This module allows you to control a <strong>Smode live server </strong>.
+                <br>
+                <br>
+                <strong>How to use it:</strong>
+                <br>
+                <ul>
+                    <li>In <strong>Smode</strong> add an new element called <strong>HttpServer</strong>.</li>
+                    <li>Configure the address, port, and the Http Mode according to your preferences.</li>
+                    <li>Return to <strong>companion</strong>, navigate to the buttons tab, and access Smode presets.</li>
+                    <li>You'll find a list of buttons, each representing various interaction possibilities.</li>
+                    <li>Add these buttons to your **Stream Deck**.</li>
+                </ul>
+            `
         },
         {
 			type: 'textinput',
 			id: 'host',
 			label: 'IP Address',
 			width: 2,
-			regex: Regex.IP
+			regex: Regex.IP,
+            default: '127.0.0.1'
 		},
         {
             type: 'textinput',
@@ -50,7 +63,7 @@ export function GetConfigFields(self) {
         {
             type: 'textinput',
             id: 'certFilePath',
-            label: 'Certifact File Path',
+            label: 'Certifacte File Path',
             width: 12,
             isVisible: (configValues) => configValues.httpMode === 'httpsWithCa',
         },
@@ -72,7 +85,7 @@ export function GetConfigFields(self) {
             type: 'static-text',
             id: 'passwordInfo',
             width: 12,
-            value: `You need to set a password only if the <b>Key file path is encrypted<b/>.`,
+            value: `You need to set a password only if the <strong>Key file path </strong> is encrypted.`,
             isVisible: (configValues) => configValues.httpMode === 'httpsWithCa',
         },
         {
@@ -83,46 +96,6 @@ export function GetConfigFields(self) {
             default: "Password",
             isVisible: (configValues) => configValues.httpMode === 'httpsWithCa',
         },
-        // {
-        //     type: 'static-text',
-        //     id: 'prefix',
-        //     label: 'Base URL',
-        //     width: 12,
-        //     value: `http://${self.config.host}:${self.config.port}`,
-        // },
-        // {
-        //     type: 'static-text',
-        //     id: 'rejectUnauthorizedInfo',
-        //     width: 12,
-        //     value: `
-        //                 <hr />
-        //                 <h5>WARNING</h5>
-        //                 This module rejects server certificates considered invalid for the following reasons:
-        //                 <ul>
-        //                     <li>Certificate is expired</li>
-        //                     <li>Certificate has the wrong host</li>
-        //                     <li>Untrusted root certificate</li>
-        //                     <li>Certificate is self-signed</li>
-        //                 </ul>
-        //                 <p>
-        //                     We DO NOT recommend turning off this option. However, if you NEED to connect to a host
-        //                     with a self-signed certificate you will need to set <strong>Unauthorized Certificates</strong>
-        //                     to <strong>Accept</strong>.
-        //                 </p>
-        //                 <p><strong>USE AT YOUR OWN RISK!<strong></p>
-        //             `,
-        // },
-        // {
-        //     type: 'dropdown',
-        //     id: 'rejectUnauthorized',
-        //     label: 'Unauthorized Certificates',
-        //     width: 6,
-        //     default: true,
-        //     choices: [
-        //         { id: true, label: 'Reject' },
-        //         { id: false, label: 'Accept - Use at your own risk!' },
-        //     ],
-        // },
         {
             type: 'static-text',
             id: 'polling',
@@ -140,7 +113,7 @@ export function GetConfigFields(self) {
             type: 'number',
             id: 'pollingInterval',
             label: 'Status Poll Interval',
-            width: 2,
+            width: 3,
             default: 1000,
             min: 0,
         },
@@ -151,20 +124,6 @@ export function GetConfigFields(self) {
 			default: false,
 			width: 2
 		},
-        // {
-		// 	type: 'checkbox',
-		// 	id: 'autoScenes',
-		// 	label: 'Auto Get Scenes',
-		// 	default: false,
-		// 	width: 2
-		// },
-        // {
-		// 	type: 'checkbox',
-		// 	id: 'autoTimeLines',
-		// 	label: 'Auto Get TimeLines',
-		// 	default: false,
-		// 	width: 2
-		// },
         {
 			type: 'checkbox',
 			id: 'autoDevices',
