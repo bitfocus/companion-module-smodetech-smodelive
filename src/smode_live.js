@@ -18,11 +18,8 @@ export const smodeLive = {
 	//██ ██   ████ ██    ██        ███████ ██      ██  ██████  ██████  ███████     ███████ ██   ████   ███████
 	//
 	async init_smode_live(self) {
-		//self.log('info', `AXIOS IS CANCEL >>> ${axios.isCancel('something')}`)
-		if (self.config.https) {
-			//console.info(`SMODE LIVE | INIT HTTPS !`)
+		if (self.config.httpMode === "httpsWithCa") {
 			self.smodeLiveData.prefix = `https://${self.config.host}:${self.config.port}`
-			//console.info(`SMODE LIVE | INIT HTTPS >>> ${self.config.certFilePath} | ${self.config.keyFilePath}`)
 			if (
 				self.config.certFilePath !== '' &&
 				self.config.keyFilePath !== '' &&
@@ -39,7 +36,6 @@ export const smodeLive = {
 					cert: certFile,
 					key: keyFile,
 					ca: certAuthorityFile,
-					keepAlive: false,
 					passphrase: self.config.password
 				}))
 			} else {
@@ -47,8 +43,15 @@ export const smodeLive = {
 				self.updateStatus(InstanceStatus.BadConfig, 'Certifacte Default')
 				return
 			}
-		} else {
-			//console.info(`SMODE LIVE | INIT HTTP !`)
+		} 
+		else if (self.config.httpMode === "https")
+		{
+			self.smodeLiveData.prefix = `https://${self.config.host}:${self.config.port}`
+			sethttpsAgent(new https.Agent({
+				rejectUnauthorized: self.config.rejectUnauthorized,
+			}))
+		}
+		else {
 			self.smodeLiveData.prefix = `http://${self.config.host}:${self.config.port}`
 		}
 

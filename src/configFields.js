@@ -28,48 +28,52 @@ export function GetConfigFields(self) {
             default: '8080',
         },
         {
-			type: 'checkbox',
-			id: 'https',
-			label: 'HTTP | HTTPS',
-			default: false,
-			width: 2
+			type: 'dropdown',
+			id: 'httpMode',
+			label: 'Http Mode',
+			default: 'http',
+            width: 3,
+			choices: [
+                { id: 'http', label: 'Http' },
+                { id: 'https', label: 'Https' },
+                { id: 'httpsWithCa', label: 'Https with certificate authority' },
+            ],
 		},
         {
 			type: 'checkbox',
 			id: 'rejectUnauthorized',
 			label: 'Reject Unauthorized',
 			default: true,
-			width: 3
+			width: 3,
+            isVisible: (configValues) => configValues.httpMode === 'httpsWithCa' || configValues.httpMode === 'https',
 		},
-        {
-            type: 'static-text',
-            id: 'certInfo',
-            width: 12,
-            value: `You need to set a certificate only if the <b> HttpServer <b/> in Smode is set to Https with certificate authority.`,
-        },
         {
             type: 'textinput',
             id: 'certFilePath',
             label: 'Certifact File Path',
             width: 12,
+            isVisible: (configValues) => configValues.httpMode === 'httpsWithCa',
         },
         {
             type: 'textinput',
             id: 'keyFilePath',
             label: 'Key File Path',
             width: 12,
+            isVisible: (configValues) => configValues.httpMode === 'httpsWithCa',
         },
         {
             type: 'textinput',
             id: 'certAuthorityFilePath',
             label: 'Certificate authority File Path',
             width: 12,
+            isVisible: (configValues) => configValues.httpMode === 'httpsWithCa',
         },
         {
             type: 'static-text',
             id: 'passwordInfo',
             width: 12,
             value: `You need to set a password only if the <b>Key file path is encrypted<b/>.`,
+            isVisible: (configValues) => configValues.httpMode === 'httpsWithCa',
         },
         {
             type: 'textinput',
@@ -77,6 +81,7 @@ export function GetConfigFields(self) {
             label: 'Password',
             width: 12,
             default: "Password",
+            isVisible: (configValues) => configValues.httpMode === 'httpsWithCa',
         },
         // {
         //     type: 'static-text',
