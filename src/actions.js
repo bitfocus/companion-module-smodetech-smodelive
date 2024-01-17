@@ -733,7 +733,7 @@ export function getActionDefinitions(self) {
 				let val = false
 				if (!self.getVariableValue(`status_on_air`)) val = true
 				// AXIOS
-				const patchOptions = new HttpPatchOptions(self, 'ONAIR', `/api/live/on-air`, { onAir: val })
+				const patchOptions = new HttpPatchOptions(self, 'ONAIR', `/api/live/on-air`, { value: val })
 				//self.log('info', `SMODE LIVE | HTTP RESPONSE | ONAIR OPTIONS >>> ${JSON.stringify(patchOptions, null, 4)}`)
 				axios
 					.request(patchOptions)
@@ -761,7 +761,7 @@ export function getActionDefinitions(self) {
 				let val = false
 				if (!self.getVariableValue(`status_eco_mode`)) val = true
 				// AXIOS
-				const patchOptions = new HttpPatchOptions(self, 'ECOMODE', `/api/live/eco-mode`, { ecoMode: val })
+				const patchOptions = new HttpPatchOptions(self, 'ECOMODE', `/api/live/eco-mode`, { value: val })
 				self.log('info', `SMODE LIVE | HTTP RESPONSE | ECOMODE OPTIONS >>> ${JSON.stringify(patchOptions, null, 4)}`)
 				axios
 					.request(patchOptions)
@@ -789,7 +789,7 @@ export function getActionDefinitions(self) {
 				let val = false
 				if (self.getVariableValue(`status_output`) === 'disabled') val = true
 				// AXIOS
-				const patchOptions = new HttpPatchOptions(self, 'OUTPUT', `/api/live/output`, { output: val })
+				const patchOptions = new HttpPatchOptions(self, 'OUTPUT', `/api/live/output`, { value: val })
 				self.log('info', `SMODE LIVE | HTTP RESPONSE | OUTPUT OPTIONS >>> ${JSON.stringify(patchOptions, null, 4)}`)
 				axios
 					.request(patchOptions)
