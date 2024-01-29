@@ -1,6 +1,6 @@
 {
 	"name": "smodelive",
-	"version": "1.0.1",
+	"version": "1.0.3",
 	"main": "main.js",
 	"type": "module",
 	"scripts": {
