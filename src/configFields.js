@@ -119,13 +119,6 @@ export function GetConfigFields(self) {
         },
         {
 			type: 'checkbox',
-			id: 'autoContents',
-			label: 'Auto Contents',
-			default: false,
-			width: 2
-		},
-        {
-			type: 'checkbox',
 			id: 'autoDevices',
 			label: 'Auto Devices',
 			default: false,
