@@ -97,17 +97,7 @@ export function getActionDefinitions(self) {
 				)
 				axios
 					.request(postOptions)
-					.then(async function (response) {
-						// console.log(response.data)
-						// console.log(response.status)
-						// console.log(response.statusText)
-						// console.log(response.headers)
-						// console.log(response.config)
-						if (response.status === 200) {
-						}
-					})
 					.catch(function (error) {
-						
 						smodeLive.actionsError(self, 'MARKERMOVE', error)
 					})
 			},
@@ -136,11 +126,6 @@ export function getActionDefinitions(self) {
 				axios
 					.request(postOptions)
 					.then(async function (response) {
-						// console.log(response.data)
-						// console.log(response.status)
-						// console.log(response.statusText)
-						// console.log(response.headers)
-						// console.log(response.config)
 						if (response.status === 200) {
 							let tl = self.smodeLiveData.timelines
 							tl[action.options.uuid].transport.playing = response.data.transport.playing
@@ -174,11 +159,6 @@ export function getActionDefinitions(self) {
 				axios
 					.request(postOptions)
 					.then(async function (response) {
-						// console.log(response.data)
-						// console.log(response.status)
-						// console.log(response.statusText)
-						// console.log(response.headers)
-						// console.log(response.config)
 						if (response.status === 200) {
 							let tl = self.smodeLiveData.timelines
 							tl[action.options.uuid].transport.playing = response.data.transport.playing
@@ -212,11 +192,6 @@ export function getActionDefinitions(self) {
 				axios
 					.request(postOptions)
 					.then(async function (response) {
-						// console.log(response.data)
-						// console.log(response.status)
-						// console.log(response.statusText)
-						// console.log(response.headers)
-						// console.log(response.config)
 						if (response.status === 200) {
 							let tl = self.smodeLiveData.timelines
 							tl[action.options.uuid].transport.playing = response.data.transport.playing
@@ -385,11 +360,6 @@ export function getActionDefinitions(self) {
 				axios
 					.request(patchOptions)
 					.then(async function (response) {
-						// console.log(response.data)
-						// console.log(response.status)
-						// console.log(response.statusText)
-						// console.log(response.headers)
-						// console.log(response.config)
 						if (response.status === 200) {
 							let tl = self.smodeLiveData.timelines
 							tl[action.options.uuid].parameters.looping = response.data.parameters.looping
@@ -432,32 +402,21 @@ export function getActionDefinitions(self) {
 			],
 			callback: async (action, context) => {
 				let contents = self.smodeLiveData.scenes
-				let val = false
-				if (self.getVariableValue(`scene_${action.options.uuid}_activation`) === 'inactive') val = true
 				const patchOptions = new HttpPatchOptions(
 					self,
 					'SCENEACTIVETOOGLE',
 					`/api/live/objects/${action.options.uuid}?variablePath=activation`,
-					{ value: val }
+					{ value: self.getVariableValue(`scene_${action.options.uuid}_activation`) !== 'active' }
 				)
-				axios
-					.request(patchOptions)
-					.then(async function (response) {
-						// console.log(response.data)
-						// console.log(response.status)
-						// console.log(response.statusText)
-						// console.log(response.headers)
-						// console.log(response.config)
+				console.log(patchOptions)
+				axios.request(patchOptions).then(async function (response) {
+					console.log(response.data)
 						if (response.status === 200) {
-							Object.keys(contents).forEach((key) => {
-								if ((key = action.options.uuid)) {
-									contents[key].activation = response.data.activation
-									smodeLive.checkSceneVariables(self)
-								}
-							})
+							if (contents[action.options.uuid] && contents[action.options.uuid].activation)
+								contents[action.options.uuid].activation = response.data.activation
+								smodeLive.checkSceneVariables(self)
 						}
-					})
-					.catch(function (error) {
+					}).catch(function (error) {
 						smodeLive.actionsError(self, 'CONTENTACTIVETOOGLE', error)
 					})
 			},

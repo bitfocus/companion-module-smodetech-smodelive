@@ -7,7 +7,6 @@ export function getFeedbackDefinitions(self) {
 	Object.keys(self.smodeLiveData.parameters).forEach((key) => {
 
 		let pOBJ = self.smodeLiveData.parameters[key]
-		console.log(`FEEDBACK | PARAMETERS >>> ${JSON.stringify(pOBJ, null, 4)}`)
 		const rgb = [
 			Math.ceil(pOBJ.colorLabel.red * 255),
 			Math.ceil(pOBJ.colorLabel.green * 255),

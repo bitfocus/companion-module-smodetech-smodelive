@@ -532,9 +532,6 @@ export const smodeLive = {
 
 			// DEVICES
 			if (response.config.id === 'DEVICES') {
-				//console.log(response.data)
-				console.log(typeof response.data)
-				//self.log('info', `SMODE LIVE | HTTP RESPONSE >>> ${JSON.stringify(response.data, null, 4)}`)
 				self.smodeLiveData.devices = response.data
 				await self.initVariables()
 				await self.updateFeedbacks()
