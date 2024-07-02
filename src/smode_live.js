@@ -101,14 +101,11 @@ export const smodeLive = {
 		let bankstMP = {}
 		for (const scene in contents) {
 			let sceneObject = contents[scene]
-
-			let paramaters = []
 			let parentUuid = ''
 			let index = 0
 			for (const action in sceneObject.actions) {
-				//self.log('warn', `SMODELIVE | GET PARAMETERS PROPS INDEX >>> ${action}`)
 				let actionOBJ = sceneObject.actions[action]
-				if (actionOBJ.class === 'ParametersState') {
+				if (actionOBJ.class === 'ParametersState' || actionOBJ.class === 'Trigger') {
 					actionOBJ['sceneLabel'] = sceneObject.label
 					actionOBJ['sceneUuid'] = sceneObject.uuid
 					// CHECK PARENTUUID FROM INDEX
@@ -123,9 +120,31 @@ export const smodeLive = {
 					bankstMP[bOJT.uuid] = bOJT
 				}
 			}
-			///parasTMP.push(paramaters)
+			for (const bank of sceneObject.parameterBanks) {
+				for (const parameter of bank.parameters) {
+					if (parameter.class === 'Trigger') {
+						self.log('warn', `SMODELIVE | GET BANKS INDEX >>> ${JSON.stringify(parameter, null, 4)}`)
+						let response = await axios.request(new HttpGetOptions(self, parameter.uuid, `/api/live/objects/${parameter.uuid}`));
+						if (response.status === 200) {
+							const obj = {
+								uuid: parameter.uuid,
+								loading: response.data.loading,
+								activation: response.data.activation,
+								label: response.data.label,
+								colorLabel: response.data.colorLabel,
+								class: parameter.class,
+								parentLabel: parameter.label,
+								sceneLabel: sceneObject.label,
+								sceneUuid: sceneObject.uuid,
+								index: index
+							};
+							parasTMP.push(obj);
+							index += 1;
+						}
+					}
+				}
+			}
 		}
-		//self.log('warn', `SMODELIVE | GET PARAMETERS PROPS >>> ${JSON.stringify(parasTMP, null, 4)}`)
 		self.smodeLiveData.banksIndex = bankstMP
 		self.smodeLiveData.parameters = parasTMP
 		//self.log('warn', `SMODELIVE | GET BANKS INDEX >>> ${JSON.stringify(self.smodeLiveData.banksIndex, null, 4)}`)
@@ -468,7 +487,6 @@ export const smodeLive = {
 
 			// CONTENTS
 			if (response.config.id === 'CONTENTS') {
-				//self.log('info', `SMODE LIVE | HTTP RESPONSE CONTENTS >>> ${JSON.stringify(response.data, null, 4)}`)
 				self.smodeLiveData.contents = response.data
 				await this.getScenesInContents(self)
 				await this.getTimelinesList(self)

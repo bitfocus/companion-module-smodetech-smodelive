@@ -30,10 +30,12 @@ export function getPresetsDefinitions(self) {
 				{
 					down: [
 						{
-							actionId: 'parameterStateIndex',
+							actionId: para.class === 'Trigger' ? 'trigTrigger' :'parameterStateIndex',
 							options: {
-								parUuid: para.uuid,
-								bankUuid: para.parentUuid,
+								...(para.class === 'Trigger'
+									? { uuid: para.uuid }
+									: { parUuid: para.uuid, bankUuid: para.parentUuid }
+								),
 							},
 						},
 					],
@@ -53,6 +55,8 @@ export function getPresetsDefinitions(self) {
 			],
 		}
 	})
+
+	//self.log('info', `PRESETS | PARAMETERS >>>${JSON.stringify(presets,null, 4)}`)
 
 	//████████ ██ ███    ███ ███████ ██      ██ ███    ██ ███████ ███████
 	//   ██    ██ ████  ████ ██      ██      ██ ████   ██ ██      ██

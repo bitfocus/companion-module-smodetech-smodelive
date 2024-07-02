@@ -18,7 +18,36 @@ export function getActionDefinitions(self) {
 				await smodeLive.getContents(self)
 			},
 		},
-
+		trigTrigger : {
+			name: 'Trig a trigger',
+			tooltip: 'Trig a trigger',
+			options: [
+				{
+					id: 'uuid',
+					type: 'textinput',
+					label: 'Paramaters UUID',
+					default: '0',
+				}
+			],
+			callback: async (action, context) => {
+				// AXIOS
+				const postOptions = new HttpPostOptions(
+					self,
+					'TRIGGER',
+					`/api/live/trigger/${action.options.uuid}`
+				)
+				axios
+					.request(postOptions)
+					.then(async function (response) {
+						if (response.status === 200) {
+							await smodeLive.checkBankIndex(self, action.options.bankUuid)
+						}
+					})
+					.catch(function (error) {
+						smodeLive.actionsError(self, 'BANKINDEX', error)
+					})
+			},
+		},
 		// PARAMETERS STATE INDEX
 		parameterStateIndex: {
 			name: 'Parameters state',
@@ -408,7 +437,6 @@ export function getActionDefinitions(self) {
 					`/api/live/objects/${action.options.uuid}?variablePath=activation`,
 					{ value: self.getVariableValue(`scene_${action.options.uuid}_activation`) !== 'active' }
 				)
-				console.log(patchOptions)
 				axios.request(patchOptions).then(async function (response) {
 					console.log(response.data)
 						if (response.status === 200) {
