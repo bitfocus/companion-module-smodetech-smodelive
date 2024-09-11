@@ -14,8 +14,10 @@ export function GetConfigFields(self) {
                 <strong>How to use it:</strong>
                 <br>
                 <ul>
-                    <li>In <strong>Smode</strong> add an new element called <strong>HttpServer</strong>.</li>
+                    <li>In <strong>Smode</strong> got to the preferences panel.</li>
+                    <li>Under the engine section, go to <strong>Http Server</strong> tab</li>
                     <li>Configure the address, port, and the Http Mode according to your preferences.</li>
+                    <li>Click on <strong>Run Server</strong></li>
                     <li>Return to <strong>companion</strong>, navigate to the buttons tab, and access Smode presets.</li>
                     <li>You'll find a list of buttons, each representing various interaction possibilities.</li>
                     <li>Add these buttons to your <strong>Stream Deck</strong>.</li>
