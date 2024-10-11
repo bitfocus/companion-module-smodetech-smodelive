@@ -20,11 +20,11 @@ export function getPresetsDefinitions(self) {
 			category: cat,
 			style: {
 				text: '$(Smode_Live:para_' + para.uuid + '_name)',
-				size: '12',
+				size: '8',
 				alignment: 'center:top',
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
-				png64: icons.ICON_OCULUS_CLOSE,
+				png64: para.class === 'Trigger' ? icons.ICON_TRIGGER: icons.ICON_OCULUS_CLOSE,
 			},
 			steps: [
 				{
@@ -81,7 +81,7 @@ export function getPresetsDefinitions(self) {
 			category: cat,
 			style: {
 				text: '$(Smode_Live:tl_' + key + '_name)',
-				size: '14',
+				size: '8',
 				color: combineRgb(255, 255, 255),
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 				alignment: 'center:top',
@@ -119,7 +119,7 @@ export function getPresetsDefinitions(self) {
 			category: cat,
 			style: {
 				text: '$(Smode_Live:tl_' + key + '_name)',
-				size: '14',
+				size: '8',
 				color: colors.colorWhite,
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 				alignment: 'center:top',
@@ -147,7 +147,7 @@ export function getPresetsDefinitions(self) {
 			category: cat,
 			style: {
 				text: '$(Smode_Live:tl_' + key + '_name)',
-				size: '14',
+				size: '8',
 				color: colors.colorWhite,
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 				alignment: 'center:top',
@@ -175,7 +175,7 @@ export function getPresetsDefinitions(self) {
 			category: cat,
 			style: {
 				text: '$(Smode_Live:tl_' + key + '_name)',
-				size: '14',
+				size: '8',
 				color: colors.colorWhite,
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 				alignment: 'center:top',
@@ -203,7 +203,7 @@ export function getPresetsDefinitions(self) {
 			category: cat,
 			style: {
 				text: '$(Smode_Live:tl_' + key + '_name)',
-				size: '14',
+				size: '8',
 				color: colors.colorWhite,
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 				alignment: 'center:top',
@@ -231,7 +231,7 @@ export function getPresetsDefinitions(self) {
 			category: cat,
 			style: {
 				text: '$(Smode_Live:tl_' + key + '_name)',
-				size: '14',
+				size: '8',
 				color: colors.colorWhite,
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 				alignment: 'center:top',
@@ -278,7 +278,7 @@ export function getPresetsDefinitions(self) {
 				category: cat,
 				style: {
 					text: '$(Smode_Live:tl_marker_' + tmOBJ.uuid + '_name)',
-					size: '14',
+					size: '8',
 					color: colors.colorWhite,
 					bgcolor: combineRgb(rgbMaker[0], rgbMaker[1], rgbMaker[2]),
 					alignment: 'center:top',
@@ -323,7 +323,7 @@ export function getPresetsDefinitions(self) {
 			category: `${sceneOBJ.label}`,
 			style: {
 				text: '$(Smode_Live:scene_' + key + '_name)\nActivation',
-				size: '14',
+				size: '8',
 				color: colors.colorWhite,
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 				alignment: 'center:top',
@@ -360,7 +360,7 @@ export function getPresetsDefinitions(self) {
 			category: `${sceneOBJ.label}`,
 			style: {
 				text: '$(Smode_Live:scene_' + key + '_name)\nLoading',
-				size: '14',
+				size: '8',
 				color: colors.colorWhite,
 				bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 				alignment: 'center:top',
@@ -408,7 +408,7 @@ export function getPresetsDefinitions(self) {
 			category: 'Devices',
 			style: {
 				text: '$(Smode_Live:device_' + deviceOBJ.uuid + '_name)',
-				size: '14',
+				size: '8',
 				color: colors.colorBlack,
 				bgcolor: colors.smodeDeviceBG,
 				alignment: 'center:top',
@@ -489,7 +489,7 @@ export function getPresetsDefinitions(self) {
 		category: 'Interface',
 		style: {
 			text: '',
-			size: '14',
+			size: '8',
 			bgcolor: colors.smodeBlackBG,
 			color: colors.smodeGrayText,
 			png64: icons.ICON_POWER_SAVE_MODE_OFF,
@@ -526,7 +526,7 @@ export function getPresetsDefinitions(self) {
 		category: 'Interface',
 		style: {
 			text: '',
-			size: '14',
+			size: '8',
 			bgcolor: colors.smodeBlackBG,
 			color: colors.smodeGrayText,
 			png64: icons.ICON_OUTPUT_OFF,
@@ -563,7 +563,7 @@ export function getPresetsDefinitions(self) {
 		category: 'Variable',
 		style: {
 			text: `$(Smode_Live:ver_program)`,
-			size: '14',
+			size: '8',
 			color: colors.colorWhite,
 			bgcolor: colors.colorBlack,
 		},
@@ -581,7 +581,7 @@ export function getPresetsDefinitions(self) {
 		category: 'Variable',
 		style: {
 			text: `$(Smode_Live:ver_versionLong)`,
-			size: '14',
+			size: '8',
 			color: colors.colorWhite,
 			bgcolor: colors.colorBlack,
 		},
@@ -599,7 +599,7 @@ export function getPresetsDefinitions(self) {
 		category: 'Variable',
 		style: {
 			text: `$(Smode_Live:status_state)`,
-			size: '14',
+			size: '8',
 			color: colors.colorWhite,
 			bgcolor: colors.colorRed,
 		},
@@ -627,7 +627,7 @@ export function getPresetsDefinitions(self) {
 		category: 'Variable',
 		style: {
 			text: `FPS\n$(Smode_Live:statistic_fps)`,
-			size: '14',
+			size: '8',
 			color: colors.colorWhite,
 			bgcolor: colors.colorBlack,
 		},
@@ -691,7 +691,7 @@ export function getPresetsDefinitions(self) {
 		category: 'General',
 		style: {
 			text: `Get\nContents`,
-			size: '14',
+			size: '8',
 			color: colors.colorWhite,
 			bgcolor: colors.colorBlack,
 		},
@@ -713,7 +713,7 @@ export function getPresetsDefinitions(self) {
 		category: 'General',
 		style: {
 			text: `Get\nDevices`,
-			size: '14',
+			size: '8',
 			color: colors.colorWhite,
 			bgcolor: colors.colorBlack,
 		},
@@ -738,7 +738,7 @@ export function getPresetsDefinitions(self) {
 	// 	category: 'General',
 	// 	style: {
 	// 		text: `Get\nScenes`,
-	// 		size: '14',
+	// 		size: '8',
 	// 		color: colors.colorWhite,
 	// 		bgcolor: colors.colorBlack,
 	// 	},
@@ -760,7 +760,7 @@ export function getPresetsDefinitions(self) {
 	// 	category: 'General',
 	// 	style: {
 	// 		text: `Get\nTimeLines`,
-	// 		size: '14',
+	// 		size: '8',
 	// 		color: colors.colorWhite,
 	// 		bgcolor: colors.colorBlack,
 	// 	},
@@ -793,7 +793,7 @@ export function getPresetsDefinitions(self) {
 		// 					category: `${sceneOBJ.label}`,
 		// 					style: {
 		// 						text: `${states[j].label}`,
-		// 						size: '14',
+		// 						size: '8',
 		// 						color: colors.colorWhite,
 		// 						bgcolor: colors.colorBlack,
 		// 						// alignment: 'center:top',
@@ -846,7 +846,7 @@ export function getPresetsDefinitions(self) {
 	// 		category: `${ctOBJ.label}`,
 	// 		style: {
 	// 			text: '$(Smode_Live:' + ctOBJ.uuid + '_name)\nActivation',
-	// 			size: '14',
+	// 			size: '8',
 	// 			color: colors.colorWhite,
 	// 			bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 	// 			alignment: 'center:top',
@@ -883,7 +883,7 @@ export function getPresetsDefinitions(self) {
 	// 		category: `${ctOBJ.label}`,
 	// 		style: {
 	// 			text: '$(Smode_Live:' + ctOBJ.uuid + '_name)\nLoading',
-	// 			size: '14',
+	// 			size: '8',
 	// 			color: colors.colorWhite,
 	// 			bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 	// 			alignment: 'center:top',
@@ -928,7 +928,7 @@ export function getPresetsDefinitions(self) {
 	// 	// 	category: 'TimeLines',
 	// 	// 	style: {
 	// 	// 		text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
-	// 	// 		size: '14',
+	// 	// 		size: '8',
 	// 	// 		color: combineRgb(255, 255, 255),
 	// 	// 		bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 	// 	// 		alignment: 'center:top',
@@ -966,7 +966,7 @@ export function getPresetsDefinitions(self) {
 	// 	// 	category: 'TimeLines',
 	// 	// 	style: {
 	// 	// 		text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
-	// 	// 		size: '14',
+	// 	// 		size: '8',
 	// 	// 		color: colors.colorWhite,
 	// 	// 		bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 	// 	// 		alignment: 'center:top',
@@ -994,7 +994,7 @@ export function getPresetsDefinitions(self) {
 	// 	// 	category: 'TimeLines',
 	// 	// 	style: {
 	// 	// 		text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
-	// 	// 		size: '14',
+	// 	// 		size: '8',
 	// 	// 		color: colors.colorWhite,
 	// 	// 		bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 	// 	// 		alignment: 'center:top',
@@ -1022,7 +1022,7 @@ export function getPresetsDefinitions(self) {
 	// 	// 	category: 'TimeLines',
 	// 	// 	style: {
 	// 	// 		text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
-	// 	// 		size: '14',
+	// 	// 		size: '8',
 	// 	// 		color: colors.colorWhite,
 	// 	// 		bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 	// 	// 		alignment: 'center:top',
@@ -1050,7 +1050,7 @@ export function getPresetsDefinitions(self) {
 	// 	// 	category: 'TimeLines',
 	// 	// 	style: {
 	// 	// 		text: '$(Smode_Live:tl_' + key + '_name)',//\n$(Live:tl_' + key + '_parent)',
-	// 	// 		size: '14',
+	// 	// 		size: '8',
 	// 	// 		color: colors.colorWhite,
 	// 	// 		bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 	// 	// 		alignment: 'center:top',
@@ -1078,7 +1078,7 @@ export function getPresetsDefinitions(self) {
 	// 	// 	category: 'TimeLines',
 	// 	// 	style: {
 	// 	// 		text: '$(Smode_Live:tl_' + key + '_name)',
-	// 	// 		size: '14',
+	// 	// 		size: '8',
 	// 	// 		color: colors.colorWhite,
 	// 	// 		bgcolor: combineRgb(rgb[0], rgb[1], rgb[2]),
 	// 	// 		alignment: 'center:top',
@@ -1125,7 +1125,7 @@ export function getPresetsDefinitions(self) {
 	// 	// 		category: 'TimeLines',
 	// 	// 		style: {
 	// 	// 			text: '$(Smode_Live:tl_maker_'+ key + '_' + tmOBJ.uuid + '_name)',
-	// 	// 			size: '14',
+	// 	// 			size: '8',
 	// 	// 			color: colors.colorWhite,
 	// 	// 			bgcolor: combineRgb(rgbMaker[0], rgbMaker[1], rgbMaker[2]),
 	// 	// 			alignment: 'center:top',
