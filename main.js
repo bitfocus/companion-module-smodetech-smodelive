@@ -88,7 +88,7 @@ class SmodeLive extends InstanceBase {
 		await smodeLive.getOnAir(this)
 		await smodeLive.getEcoMode(this)
 		await smodeLive.getOutput(this)
-		if (this.config.autoContents) await smodeLive.getContents(this)
+		await smodeLive.getContents(this)
 		if (this.config.autoDevices) await smodeLive.getDevices(this)
 	}
 
