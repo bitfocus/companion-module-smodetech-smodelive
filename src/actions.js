@@ -438,11 +438,12 @@ export function getActionDefinitions(self) {
 					{ value: self.getVariableValue(`scene_${action.options.uuid}_activation`) !== 'active' }
 				)
 				axios.request(patchOptions).then(async function (response) {
-					console.log(response.data)
 						if (response.status === 200) {
 							if (contents[action.options.uuid] && contents[action.options.uuid].activation)
-								contents[action.options.uuid].activation = response.data.activation
+							{
+								contents[action.options.uuid].activation = response.data
 								smodeLive.checkSceneVariables(self)
+							}
 						}
 					}).catch(function (error) {
 						smodeLive.actionsError(self, 'CONTENTACTIVETOOGLE', error)

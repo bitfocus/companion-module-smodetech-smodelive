@@ -302,11 +302,6 @@ export const smodeLive = {
 	async checkSceneVariables(self) {
 		let scenes = self.smodeLiveData.scenes
 		Object.keys(scenes).forEach((key) => {
-			const rgb = [
-				Math.ceil(scenes[key].colorLabel.red * 255),
-				Math.ceil(scenes[key].colorLabel.green * 255),
-				Math.ceil(scenes[key].colorLabel.blue * 255),
-			]
 			self.setVariableValues({
 				[`scene_${key}_uuid`]: key,
 				[`scene_${key}_activation`]: scenes[key].activation,
