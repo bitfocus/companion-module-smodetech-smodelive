@@ -3,7 +3,7 @@
 	"name": "Smode Live",
 	"shortname": "Smode Live",
 	"description": "Smode Live module for companion",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-smodetech-smodelive.git",
 	"bugs": "https://github.com/bitfocus/companion-module-smodetech-smodelive/issues",
