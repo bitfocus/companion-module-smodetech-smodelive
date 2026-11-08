@@ -12,12 +12,12 @@
 		"url": "git+https://github.com/bitfocus/companion-module-smodetech-smodelive.git"
 	},
 	"dependencies": {
-		"@companion-module/base": "~1.4.3",
+		"@companion-module/base": "~1.15.1",
 		"axios": "^1.20.0",
 		"fs": "^0.0.1-security"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^2.8.0"
+		"@companion-module/tools": "~2.9.0"
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json"
 }
